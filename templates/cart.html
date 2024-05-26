@@ -1,0 +1,191 @@
+{%extends 'main.html'%}
+
+{%block content%}
+<style>
+
+
+/* CSS */
+.button-89 {
+  --b: 3px;   /* border thickness */
+  --s: .45em; /* size of the corner */
+  --color: #373B44;
+  
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+    var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 16px;
+
+  border: 0;
+
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.button-89:hover,
+.button-89:focus-visible{
+  --_p: 0px;
+  outline-color: var(--color);
+  outline-offset: .05em;
+}
+
+.button-89:active {
+  background: var(--color);
+  color: #fff;
+}
+.checkout{
+  position:absolute;
+  right: 1%;
+  top: 0;
+ 
+}
+  </style>
+<div class="page-content" style="overflow-y:scroll;">
+    <section class="h-100 gradient-custom">
+        <div class="container py-5">
+          <div class="row d-flex justify-content-center my-4">
+            <div class="col-md-8">
+              <div class="card mb-4">
+                
+                <div class="card-header py-3">
+                  <h5 class="mb-0">Cart - {{items|length}} items</h5>
+                </div>
+                <div class="card-body">
+                  <!-- Single item -->
+                  {%for item in items%}
+                  <div class="row">
+                    <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                      <!-- Image -->
+                      <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                        <img src="{{item['image']}}"
+                          class="w-100" alt="{{item['name']}}" />
+                        <a href="#!">
+                          <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                        </a>
+                      </div>
+                      <!-- Image -->
+                    </div>
+      
+                    <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                      <!-- Data -->
+                      <p><strong>{{item['name']}}</strong></p>
+                      
+                      <p>Discount: {{item['discount_amount']}}</p>
+                      <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
+                        title="Remove item" onclick="module.deleteCart('{{item["id"]}}')">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                      <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" onclick="module.addWish('{{item["id"]}}')"
+                        title="Move to the wish list">
+                        <i class="fas fa-heart"></i>
+                      </button>
+                      <!-- Data -->
+                    </div>
+      
+                    <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                      <!-- Quantity -->
+                      <div class="d-flex mb-4" style="max-width: 300px">
+                        <div class="form-outline">
+                          <input id="form1" min="0" name="quantity" value="{{item['quantity']}}" type="number" class="form-control" />
+                          <label class="form-label" for="form1">Quantity</label>
+                        </div>
+                        
+                      </div>
+                      <!-- Quantity -->
+      
+                      <!-- Price -->
+                      <p class="text-start text-md-center">
+                        <strong>KES {{item['unit_price']}}</strong>
+                      </p>
+                      <!-- Price -->
+                    </div>
+                  </div>
+                  {%endfor%}
+                  <!-- Single item -->
+      
+                  <hr class="my-4" />
+      
+                  <!-- Single item -->
+                
+                  <!-- Single item -->
+                </div>
+              </div>
+              <div class="card mb-4">
+                <div class="card-body">
+                  <p><strong>Expected shipping delivery</strong></p>
+                  <p class="mb-0">12.10.2020 - 14.10.2020</p>
+                </div>
+              </div>
+              <div class="card mb-4 mb-lg-0">
+                <div class="card-body">
+                  <p><strong>We accept</strong></p>
+                  <img class="me-2" width="45px" height="40px"
+                    src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+                    alt="Visa" />
+                 
+                 
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card mb-4">
+                <div class="card-header py-3">
+                  <h5 class="mb-0">Summary</h5>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group list-group-flush">
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                      Products
+                      <span>KES {{total}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                      Shipping
+                      <span>KES {{shipping}}</span>
+                    </li>
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                      <div>
+                        <strong>Total amount</strong>
+                        <strong>
+                          <p class="mb-0">(including VAT)</p>
+                        </strong>
+                      </div>
+                      <span><strong>KES {{total}}</strong></span>
+                    </li>
+                  </ul>
+      
+                  <button type="button" class="button-89 btn-block" onclick="location.href='/checkout'">
+                    Go to checkout
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+</div>
+<script>
+  const module = {}
+</script>
+<script type="module">
+  import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
+  import {showProduct,showSingle,addCart,addWish} from "{{url_for('static',filename='js/modules/gallery/gallery.js')}}"
+  module.fetch = fetchFunction
+  module.showProduct= showProduct
+    module.showSingle = showSingle
+    module.user_id = "{{user_id}}"
+  module.addCart = addCart
+  module.addWish = addWish
+</script>
+{%endblock%}
+
+
+
+

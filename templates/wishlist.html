@@ -1,0 +1,41 @@
+{%extends 'main.html'%}
+
+{%block content%}
+
+<div class="page-content space-top p-b65">
+	<div class="container">
+		<div class="row g-2" id="wishlist">
+			
+			
+		</div>
+	</div>
+</div>
+
+<script>
+	const module = {}
+</script>
+<script type="module">
+	import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
+	module.fetch = fetchFunction
+	
+	module.fetch("/api/user/getWish",null,"POST",function(data){
+		data.data.map(function(data){
+			document.getElementById("wishlist").innerHTML += `
+				<div class="col-6">
+					<div class="dz-media-card">
+						<a href="#detail/${data.id}">
+							<div class="dz-media">
+								<img src=${data.image} alt="">
+							</div>
+							<div class="dz-content">
+								<h6 class="title">${data.name}</h6>	
+								<span class="about">${data.company.toUpperCase()}</span>	
+							</div>
+						</a>
+					</div>
+				</div>
+			`
+		})
+	})
+</script>
+{%endblock%}

@@ -1,0 +1,151 @@
+{%extends 'main.html'%}
+
+{%block content%}
+
+
+	<!-- Header -->
+	<header class="header header-fixed bg-white">
+		<div class="container">
+			<div class="header-content">
+				<div class="left-content me-3">
+					<a href="javascript:void(0);" class="back-btn">
+						<i class="fa fa-arrow-left"></i>
+					</a>
+					<h6 class="title">Settings</h6>
+				</div>
+				<div class="mid-content">
+				</div>
+				<div class="right-content">
+				</div>
+			</div>
+		</div>
+	</header>
+<!-- Header -->
+
+<!-- Page Content Start -->
+<div class="page-content space-top">
+	<div class="container"> 
+		<h6 class="title">Account Setting</h6>
+		<div class="card style-3">
+			<div class="card-header">
+				<h6 class="title mb-0 font-14 font-w500">Phone Number</h6>
+			</div>
+			<div class="card-body">
+				<a href="javascript:void(0);" class="setting-input" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom1" aria-controls="offcanvasBottom">
+					<i class="fa fa-phone"></i>
+					<span>+{{session['user']['mobile']}}</span>
+				</a>
+			</div>
+		</div>
+		<div class="card style-3">
+			<div class="card-header">
+				<h6 class="title mb-0 font-14 font-w500">Email Address</h6>
+			</div>
+			<div class="card-body">
+				<a href="javascript:void(0);" class="setting-input" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom2" aria-controls="offcanvasBottom">
+					<i class="fa fa-envelope"></i>
+					<span>{{session['email']}}</span>
+				</a>
+			</div>
+		</div>
+		<h6 class="title">Discovery Setting</h6>
+		<div class="card style-3">
+			<div class="card-header">
+				<h6 class="title mb-0 font-14 font-w500">Location</h6>
+			</div>
+			<div class="card-body">
+				<a href="javascript:void(0);" class="setting-input" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom3" aria-controls="offcanvasBottom">
+					<i class="fa fa-map-pin"></i>
+					<span>{{profile['address']}}</span>
+				</a>
+			</div>
+		</div>
+		
+		
+		<div class="card style-3 mb-0">
+			<div class="card-header">
+				<h6 class="title mb-0 font-14 font-w500">Price Range</h6>
+				<div class="title font-w600 font-16">
+					<span class="example-val title slider-margin-value-min">{{profile['price_range'][0]}}</span> to
+					<span class="example-val title slider-margin-value-max">{{profile['price_range'][1]}}</span>
+				</div>
+			</div>
+			<div class="card-body py-4">
+				<div class="range-slider style-1 w-100">
+					<div id="slider-tooltips4"></div>
+				</div>
+			</div>
+		</div>
+	</div> 
+</div>
+<!-- Page Content End -->
+
+<!-- Phone Number OffCanvas -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom1">
+	<button type="button" class="btn-close drage-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	<div class="offcanvas-header share-style m-0 pb-0">
+		<h6 class="title">Phone Number</h6>
+	</div>
+	<div class="offcanvas-body overflow-visible">
+		<form method="post">
+			<div class="input-group dz-select">
+				<div class="input-group-text"> 
+					<div class="input-icon">
+						<i class="fa-solid fa-phone"></i>
+					</div>
+				</div>
+				<input type="number" class="form-control" name="mobile" value="{{session['user']['mobile']}}">
+			</div>
+			<a href="javascript:void(0);" class="btn btn-gradient w-100 dz-flex-box btn-shadow rounded-xl" data-bs-dismiss="offcanvas" aria-label="Close">Save</a>
+		</form>		
+	</div>
+</div>
+<!-- Phone Number OffCanvas -->
+
+<!--  Email OffCanvas -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom2">
+	<button type="button" class="btn-close drage-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	<div class="offcanvas-header share-style m-0 pb-0">
+		<h6 class="title">Email Address</h6>
+	</div>
+	<div class="offcanvas-body">
+		<form method="post">
+			<div class="input-group input-group-icon">
+				<div class="input-group-text">
+					<div class="input-icon">
+						<i class="fa-solid fa-envelope"></i>
+					</div>
+				</div>
+				<input type="email" name="email" class="form-control" value="{{session['user']['email']}}">
+			</div>
+			<a href="javascript:void(0);" class="btn btn-gradient w-100 dz-flex-box btn-shadow rounded-xl" data-bs-dismiss="offcanvas" aria-label="Close">Save</a>
+		</form>
+	</div>
+</div>
+<!--  Email OffCanvas -->
+
+<!--  Location OffCanvas -->
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom3">
+	<button type="button" class="btn-close drage-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	<div class="offcanvas-header share-style m-0 pb-0">
+		<h6 class="title">Shipping Address</h6>
+	</div>
+	<div class="offcanvas-body">
+		<form method="post">
+			<div class="input-group input-group-icon">
+				<div class="input-group-text">
+					<div class="input-icon">
+						<i class="fa-solid fa-map-pin"></i>
+					</div>
+				</div>
+				<input type="text" name="address" class="form-control" value="{{profile['address']}}">
+			</div>
+			<a href="javascript:void(0);" class="btn btn-gradient w-100 dz-flex-box btn-shadow rounded-xl" data-bs-dismiss="offcanvas" aria-label="Close">Save</a>
+		</form>
+	</div>
+</div>
+<!--  Location OffCanvas -->
+
+
+
+{%endblock%}

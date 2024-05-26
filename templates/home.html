@@ -1,0 +1,47 @@
+{%extends 'main.html'%}
+{%block content%}
+<style>
+    swiper-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    swiper-slide {
+      text-align: center;
+      font-size: 18px;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    swiper-slide img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+<div class="page-content space-top p-b65">
+	<div class="container fixed-full-area " id="gallery" >
+		
+	</div>
+</div>
+<script>
+	const module = {}
+</script>
+<script type="module">
+	import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
+	import {showProduct,showSingle,addWish,addCart} from "{{url_for('static',filename='js/modules/gallery/gallery.js')}}"
+	module.fetch = fetchFunction
+	module.showProduct= showProduct
+  module.showSingle = showSingle
+  module.user_id = "{{user_id}}"
+	module.fetch("/api/store/getAll",null,"POST",module.showProduct)
+  module.addWish = addWish
+  module.addCart = addCart
+</script>
+<script>
+	
+</script>
+{%endblock%}

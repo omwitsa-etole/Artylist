@@ -1,0 +1,109 @@
+{%extends 'main.html'%}
+
+{%block content%}
+
+
+	<!-- Header -->
+	<header class="header header-fixed bg-white border-0">
+		<div class="container">
+			<div class="header-content">
+				<div class="left-content me-3">
+					<a href="home" class="back-btn">
+						<i class="fa fa-arrow-left"></i>
+					</a>
+					<h6 class="title">Profile</h6>
+				</div>
+				<div class="mid-content">
+				</div>
+				<div class="right-content dz-meta">
+					<a href="setting" class="filter-icon">
+						<i class="fa fa-gear"></i>
+					</a>
+				</div>
+			</div>
+		</div>
+	</header>
+<!-- Header -->
+
+<!-- Page Content Start -->
+<div class="page-content space-top p-b60">
+	<div class="container pt-0"> 
+		<div class="profile-area">
+			<div class="main-profile">
+				<div class="about-profile">
+					<a href="setting" class="setting dz-icon">
+						<i class="fa fa-gear"></i>
+					</a>
+					<div class="media rounded-circle">
+						<img src="{{url_for('static',filename=profile['avatar'])}}" alt="profile-image">
+						<svg class="radial-progress m-b20" data-percentage="40" viewBox="0 0 80 80">
+							<circle class="incomplete" cx="40" cy="40" r="35"></circle>
+							<circle class="complete" cx="40" cy="40" r="35" style="stroke-dashoffset: 39.58406743523136;"></circle>
+						</svg>
+						<div class="data-fill"><span>40%</span></div>
+					</div>
+					<a href="edit-profile" class="edit-profile dz-icon">
+						<i class="fa fa-edit"></i>
+					</a>
+				</div>
+				<div class="profile-detail">
+					<h5 class="name">{{profile['fullname']}}, {{profile['age']}}</h5>
+					<p class="mb-0"><i class="icon feather icon-map-pin me-1"></i> {{profile['address']}}</p>
+				</div>
+			</div>
+			<div class="row g-2 mb-5">
+				<div class="col-4">
+					<div class="card style-2">
+						<div class="card-body">
+							<a href="javascript:void(0);" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom">	
+								<div class="card-icon">
+									<i class="flaticon flaticon-star-1"></i>
+								</div>
+								<div class="card-content">
+									<p>{{orders|length}} Completed Orders</p>
+								</div>
+								<i class="fa fa-plus"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card style-2">
+						<div class="card-body">
+							<a href="cart?orders">
+								<div class="card-icon">
+									<i class="flaticon flaticon-shuttle"></i>
+								</div>
+								<div class="card-content">
+									<p>My Orders</p>
+								</div>
+								<i class="fa fa-shopping-cart"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="col-4">
+					<div class="card style-2">
+						<div class="card-body">
+							<a href="#">
+								<div class="card-icon">
+									<i class="flaticon flaticon-bell"></i>
+								</div>
+								<div class="card-content">
+									<p>Notifications</p>
+								</div>
+								<i class="fa fa-notification-bell"></i>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div> 
+</div>
+<!-- Page Content End -->
+
+<!-- Like OffCanvas -->
+
+{%endblock%}

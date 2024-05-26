@@ -1,0 +1,81 @@
+{%extends 'main.html'%}
+
+{%block content%}
+<div class="page-content space-top p-b60">
+		<div class="container">
+            <div class="row">
+                <div class="form-outline" data-mdb-input-init>
+                    <input type="search" id="form1" class="form-control product-query" onkeyup="filterFn(this.value)" placeholder="Type query" aria-label="Search" />
+                </div><br>
+            </div>
+			<div class="row g-3 item-list" id="item-list" style="margin-top: 14px;overflow-y: scroll;height: 400px;">
+				
+				
+				{%for product in products%}
+				<div class="col-md-6 col-12 item-item"  style="margin-bottom: 31px;">
+					<div class="dz-media-card style-3">
+						<div class="dz-media">
+							<img src={{product['image']}}>
+						</div>
+						<div class="dz-content">
+							<h3 class="title">{{product['item_group']}}</h3>
+							<p>{{product['description']}}</p>
+							{%set prod_id = product['id']%}
+							<a href="javascript:void(0);" class="btn btn-light rounded-xl explore-now" onclick='module.showSingle("{{prod_id}}")'>EXPLORE NOW</a>
+						</div>
+					</div>
+				</div>
+				{%endfor%}
+				<br><br>
+			</div><br><br>
+		</div>
+	</div>
+	<script>
+		const module = {}
+	</script>
+	<script type="module">
+		import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
+		import {showProduct,showSingle,addCart,addWish} from "{{url_for('static',filename='js/modules/gallery/gallery.js')}}"
+		module.fetch = fetchFunction
+		module.showProduct= showProduct
+	  	module.showSingle = showSingle
+	  	module.user_id = "{{user_id}}"
+		module.addCart = addCart
+		module.addWish = addWish
+	</script>
+	<script>
+		
+		function filterFn(q){
+			const element = document.getElementById("item-list");
+			const items = element.getElementsByClassName("item-item")
+			//let target = e.target
+			const itemsArray = Array.from(items);
+
+			for(const item of items){
+				// Find the element with class "dz-content" within the current "item-item"
+				const dzContent = item.getElementsByTagName('h3');
+				const pc = item.getElementsByTagName("p");
+				//console.log(dzContent)
+				q = q.toUpperCase()
+				for(const hd of dzContent){
+					let txt = hd.textContent.toUpperCase()
+					let index = Array.from(dzContent).indexOf(hd)
+					let txt_2 = pc[index].textContent.toUpperCase()
+					console.log(txt,txt.includes(q),index)
+					if (txt.includes(q) || txt_2.includes(q)) {
+						console.log(hd.textContent.toUpperCase())
+						// If it matches, show the item
+						item.style.display = '';
+					} else {
+						// If it doesn't match, hide the item
+						item.style.display = 'none';
+					}
+				}
+				// Check if the dz-content element exists and if its text matches the query
+				
+			};
+			//for(const item of items){element.innerHTML += item}
+			
+		}
+	</script>
+{%endblock%}

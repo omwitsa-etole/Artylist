@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Title -->
+	<title>ArtlyList</title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
+	<meta name="theme-color" content="#FF50A2">
+	<meta name="author" content="DexignZone">
+	<meta name="robots" content="index, follow"> 
+	<meta name="keywords" content="android, ios, mobile, application template, progressive web app, ui kit, multiple color, dark layout, match, partner, perfect match, dating app, dating, couples, dating kit, mobile app">
+	
+	<!-- Globle Stylesheets -->
+	<link href="{{url_for('static',filename='assets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
+    
+	<!-- Stylesheets -->
+    <link rel="stylesheet" class="main-css" type="text/css" href="{{url_for('static',filename='assets/css/style.css')}}">
+    <style>
+		.account-area p{width:100%;text-align: center;display: flex;}
+	</style>
+    <!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,300;6..12,400;6..12,500;6..12,600;6..12,700;6..12,800;6..12,900;6..12,1000&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+</head>   
+<body class="bg-white">
+<div class="page-wrapper">
+	<!-- Preloader -->
+	<div id="preloader">
+		<div class="loader">
+			<div class="load-circle"><div></div><div></div></div>
+		</div>
+	</div>
+    <!-- Preloader end-->
+
+    <!-- Page Content -->
+    <div class="page-content" id="page-content">
+		<div class="container">
+			<div class="account-area">
+				
+				<div class="section-head ps-0">
+					<h6>Phone Login may fail to work, try email login</h6>
+					<h3>Please Enter your Phone Number</h3>
+				</div>
+				<form onsubmit="document.getElementById('getcode');return false;">
+					<div class="input-group dz-select">
+						<div class="input-group-text"> 
+							<div>
+								<select id="countrycode" class="form-control custom-image-select image-select">
+									<option data-thumbnail="{{url_for('static',filename='assets/images/flags/kenya.png')}}">+254</option>
+									<option data-thumbnail="{{url_for('static',filename='assets/images/flags/tz.png')}}">+255</option>
+									<option data-thumbnail="{{url_for('static',filename='assets/images/flags/uae.png')}}">+971</option>
+									<option data-thumbnail="{{url_for('static',filename='assets/images/flags/us.png')}}">+1</option>
+								</select>
+							</div>
+						</div>
+						<input type="number" id="number"class="form-control" placeholder="Phone Number">
+					</div>
+				</form>		
+                <p><a id="emailLogin" onclick="module.eLogin()" href="javascript:void(0)">Login with Email</a></p>
+			</div>
+			
+        </div>
+    </div>
+    <!-- Page Content End -->
+	<!-- Footer -->
+    <div class="footer fixed bg-white">
+		<div class="container">
+			<p><a href="store" style="text-decoration:none;cursor:pointer;"><h4>Browse as Guest</h4></a></p>
+			<a id="getcode" href="javascript:void(0)" class="btn btn-lg btn-gradient w-100 dz-flex-box btn-shadow rounded-xl">Next</a>
+		</div>
+	</div>
+	<!-- Footer -->
+</div>
+<!--**********************************
+    Scripts
+***********************************-->
+<script src="{{url_for('static',filename='assets/js/jquery.js')}}"></script>
+
+<script src="{{url_for('static',filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{url_for('static',filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script><!-- Swiper -->
+<script src="{{url_for('static',filename='assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
+<script src="{{url_for('static',filename='assets/js/dz.carousel.js')}}"></script><!-- Swiper -->
+<script src="{{url_for('static',filename='assets/js/settings.js')}}"></script>
+<script src="{{url_for('static',filename='assets/js/custom.js')}}"></script>
+<script type="text/javascript">
+    const module = {};
+    $("#getcode").click(function(){
+        let val = $("#number").val()
+        let code = $("#countrycode").val()
+        module.verify(val,code)
+    })
+	
+  </script>
+<script type="module">
+    import {emailLogin,numberLogin,getVerification} from "{{url_for('static',filename='js/modules/login.js')}}"
+    import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
+	module.nLogin = numberLogin
+    module.verify = getVerification
+    module.eLogin = emailLogin
+	module.fetch = fetchFunction
+</script>
+</body>
+</html>
