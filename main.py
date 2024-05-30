@@ -57,6 +57,8 @@ async def addWish():
         user_id = data["user_id"]
     product = await Products.find(id)
     #print("cart",user_id,product)
+    if product == None:
+        return jsonify({'message':"Item not found","status": 1})
     print("user_id",user_id)
     if user_id:
         if int(user_id) < 1:
@@ -294,7 +296,7 @@ async def checkout():
         merchant_id = request.form['merchant_id']
         amount = request.form['amount_paid']
         
-        new_order = await Order.add(user_id=user_id,cart=items,checkout=checkout_id,merhant=merchant_id,amount_paid=amount)
+        new_order = await Order.add(user_id=user_id,cart=items,checkout=checkout_id,merchant=merchant_id,amount_paid=amount)
     #order_id = "SN8478042099"
     return render_template("checkout.html",**locals())
 

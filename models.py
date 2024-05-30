@@ -108,7 +108,7 @@ class Product:
         pass
 
 class Order_Item:
-    def __init__(self,id,user_id,item_id,order_id,name,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,deleted,groups=None,companies=None,products=None,items=None):
+    def __init__(self,id,user_id,item_id,order_id,name,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,deleted,company,groups=None,companies=None,products=None,items=None):
         self.id = id
         self.item_id = item_id
         self.order_id = order_id
@@ -121,8 +121,9 @@ class Order_Item:
         self.discount_amount = discount_amount
         self.amount = amount
         self.deleted = deleted
-        self.company = None
+        self.company = company
         if products:
+
             for p in products:
                 if p['id'] == self.item_id:
                     self.name = p['name']
@@ -139,7 +140,7 @@ class Order_Item:
         return self.__dict__
 
 class Order_Invoice:
-    def __init__(self,id,user_id,company,amounts_tax,created,due,status,customer,amount_due,discount,tax_total,amount_paid,balance_due,advance_paid,paid,checkout_id,merchant_id,shipping,notes,created_at,updated_at,deleted,order_num):
+    def __init__(self,id,user_id,company,amounts_tax,created,due,status,customer,amount_due,discount,tax_total,amount_paid,balance_due,advance_paid,paid,checkout_id,merchant_id,shipping,notes,user,created_at,updated_at,deleted,order_num,*n):
         self.id = id
         self.user_id = user_id
         self.company = company
@@ -157,6 +158,7 @@ class Order_Invoice:
         self.notes = notes
         self.created_at = created
         self.deleted = deleted
+        #self.user = user_id
         pass
     def to_dict(self):
         return self.__dict__
@@ -390,7 +392,7 @@ class Cart:
     async def update_all(user_id,order_id,cart=None):
         if not cart:
             cart = await Cart.find(user_id)
-        query = DatabaseManager.update(f"update sales_order_item set order_id=%s where user_id=%s and order_id is NULL"%(order_id,user_id))
+        query = DatabaseManager.update(f"update sales_order_item set order_id='%s' and deleted_at='%s' where user_id='%s' and order_id is NULL or order_id='0'"%(order_id,date.today(),user_id))
         if query:
             return {'status':0,'message':'Updated order items'}
         else:
@@ -407,11 +409,12 @@ class Order:
             discounts = 0
             taxes = 0
             for i in cart:
-                discount += i['discount_amount']
+                discounts += i['discount_amount']
                 taxes += i['unit_price']*i['tax_rate']
                 total += i['unit_price'] - i['discount_amount']
             order_id = await Order.get_next()
-            query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,total,amount_paid,amounts_tax_inc,disc_total,tax_total,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user) values (%s,%s,%d,%d,%d,%d,%d,%d,%d,%s,%s,%s,%s,%s)"%(order_id,user_id,total,amount_paid,taxes,discounts,taxes,total-amount_paid,amount_paid,checokut,merchant,None,None,user_id))
+            query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name) values ('%s','%s',%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s')"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,'Order'))
+            print("qury",query)
             if query:
                 await Cart.update_all(user_id,order_id,cart=cart)
                 return await Order.find(order_id)

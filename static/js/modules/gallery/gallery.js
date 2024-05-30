@@ -90,7 +90,7 @@ export function addCart(item_id){
         if(data.message){
             alert(data.message)
         }
-        if(data.id){
+        if(data.length > 1){
             alert("Item added to cart")
         }
     })

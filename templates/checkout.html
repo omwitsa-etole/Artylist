@@ -477,12 +477,15 @@
             $('input[name="merchant_id"]').val(data.merchant_id)
             $('input[name="amount_paid"]').val(data.amount)
             $(".error").html(`Checkout Initiated validate on your phone...<br>Querying....`)
-            setTimeout(function(){
-                module.payQuery(data.checkout_id);
-                module.next = [function(){
+                for(let i=0;i<5;i++){
+                setTimeout(function(){
+                    module.payQuery(data.checkout_id);
+                    module.next = [function(){
+                        $("#checkout-form").submit()
+                    },null];
                     $("#checkout-form").submit()
-                },null]
-            },2500)
+                },3500)
+            }
             
         }
 
@@ -546,10 +549,10 @@
             if(data.ResultCode){
                 if(data.ResultCode != '0'){
                     
-                    $('.error').html(`Payment incomplete with message : <br> ${data.ResultDesc}`);
+                    $('.error').append(`Payment incomplete with message : <br> ${data.ResultDesc}`);
                     module.next = null;
                 }else{
-                    $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
+                    $('.error').html(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
                     await module.next[0](module.next[1]);
                     module.next = null;
                 }
@@ -560,7 +563,7 @@
                     let payload = module.next[1];
                     payload.checkout_id = data.CheckoutRequestID ? data.CheckoutRequestID : null;
                     payload.merchant_id = data.MerchantRequestID ? data.MerchantRequestID : null;
-                    $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
+                    $('.error').html(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
                     await module.next[0](payload);
 
                     module.next = null;
