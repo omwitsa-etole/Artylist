@@ -1,108 +1,217 @@
-<section class="h-100 bg-dark">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col">
-        <div class="card card-registration my-4">
-          <div class="row g-0">
-            <div class="col-xl-6 d-none d-xl-block">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/img4.webp"
-                alt="Sample photo" class="img-fluid"
-                style="border-top-left-radius: .25rem; border-bottom-left-radius: .25rem;" />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	
+	<!-- Title -->
+	<title>ArtlyList</title>
+
+	<!-- Meta -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, minimal-ui, viewport-fit=cover">
+	<meta name="theme-color" content="#FF50A2">
+	<meta name="author" content="DexignZone">
+	<meta name="robots" content="index, follow"> 
+	<meta name="keywords" content="android, ios, mobile, application template, progressive web app, ui kit, multiple color, dark layout, match, partner, perfect match, dating app, dating, couples, dating kit, mobile app">
+	
+	<!-- Globle Stylesheets -->
+	<link href="{{url_for('static',filename='assets/vendor/bootstrap-select/dist/css/bootstrap-select.min.css')}}" rel="stylesheet">
+    
+	<!-- Stylesheets -->
+    <link rel="stylesheet" class="main-css" type="text/css" href="{{url_for('static',filename='assets/css/style.css')}}">
+    <style>
+		.account-area p{width:100%;text-align: center;display: flex;}
+    body{overflow-y: auto;}
+    .notifications-container {
+  width: 320px;
+  height: auto;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+.alert {
+  background-color: rgb(254 252 232);
+  border-left-width: 4px;
+  border-color: rgb(250 204 21);
+  border-radius: 0.375rem;
+  padding: 1rem;
+}
+
+.alert-svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: rgb(250 204 21);
+}
+
+.alert-prompt-wrap {
+  margin-left: 0.75rem;
+  color: rgb(202 138 4);
+}
+
+.alert-prompt-link {
+  font-weight: 500;
+  color: rgb(141, 56, 0);
+  text-decoration: underline;
+}
+
+.alert-prompt-link:hover {
+  color: rgb(202 138 4);
+}
+	</style>
+    <!-- Google Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,200;6..12,300;6..12,400;6..12,500;6..12,600;6..12,700;6..12,800;6..12,900;6..12,1000&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+</head>   
+<body class="bg-white">
+  <div class="page-wrapper">
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="loader">
+        <div class="load-circle"><div></div><div></div></div>
+      </div>
+    </div>
+    <div class="page-content" id="page-content" style="overflow-y: scroll;"> 
+      {%if msg != None%}
+      <div class="notifications-container">
+        <div class="alert">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 alert-svg">
+                <path clip-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" fill-rule="evenodd"></path>
+              </svg>
             </div>
-            <div class="col-xl-6">
-              <div class="card-body p-md-5 text-black">
-				<form method="POST">
-                <h3 class="mb-5 text-uppercase">registration form</h3>
+            <div class="alert-prompt-wrap">
+              <p class="text-sm text-yellow-700">
+               {{msg}}
+                <a class="alert-prompt-link" href="#" onclick="">close</a>
+              </p>
+          </div>
+        </div>
+        </div>
+      </div>
+      {%endif%}
+    <div class="container py-5 h-75" style="margin: 1% auto;">
+      <div class="row d-flex justify-content-center align-items-center h-75" style="height: 459px;overflow-y: scroll;">
+        <div class="col">
+          <div class="card card-registration my-4">
+            <div class="row g-0">
+            
+              <div class="col-xl-6" style="width:100%;">
+                <div class="card-body p-md-5 text-black">
+          <form method="POST">
+                  <h3 class="mb-5 text-uppercase">registration form</h3>
 
-                <div class="row">
-                  <div class="col-md-6 mb-4">
-                    <div data-mdb-input-init class="form-outline">
-                      <input type="text" id="form3Example1m" required name="firstname" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example1m">First name</label>
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+                      <div data-mdb-input-init class="form-outline">
+                        <input type="text" id="form3Example1m" required name="firstname" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1m">First name</label>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                      <div data-mdb-input-init class="form-outline">
+                        <input type="text" id="form3Example1n" required name="lastname" class="form-control form-control-lg" />
+                        <label class="form-label" for="form3Example1n">Last name</label>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6 mb-4">
-                    <div data-mdb-input-init class="form-outline">
-                      <input type="text" id="form3Example1n" required name="lastname" class="form-control form-control-lg" />
-                      <label class="form-label" for="form3Example1n">Last name</label>
+
+                  
+
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" name="address" id="form3Example8" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example8">Address</label>
+                  </div>
+
+                  <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
+
+                    <h6 class="mb-0 me-4">Gender: </h6>
+
+                    <div class="form-check form-check-inline mb-0 me-4">
+                      <input class="form-check-input" name="gender"  type="radio"  id="femaleGender"
+                        value="Female" />
+                      <label class="form-check-label" for="femaleGender">Female</label>
+                    </div>
+
+                    <div class="form-check form-check-inline mb-0 me-4">
+                      <input class="form-check-input" type="radio" name="gender" id="maleGender"
+                        value="Male" checked/>
+                      <label class="form-check-label" for="maleGender">Male</label>
+                    </div>
+
+                    <div class="form-check form-check-inline mb-0">
+                      <input class="form-check-input" type="radio" name="gender" id="otherGender"
+                        value="Other" />
+                      <label class="form-check-label" for="otherGender">Other</label>
+                    </div>
+
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-6 mb-4">
+            <label class="form-label" for="form3Example1c">State</label>
+                    <input type="text" id="form3Examplee1c" name="state"  class="form-control form-control-lg" />
+
+                    </div>
+                    <div class="col-md-6 mb-4">
+            <label class="form-label" for="form3Example2c" name="country">Country</label>
+                    <input type="text" id="form3Examplee2c" class="form-control form-control-lg" />
+
                     </div>
                   </div>
-                </div>
 
-                
-
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" name="address" id="form3Example8" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example8">Address</label>
-                </div>
-
-                <div class="d-md-flex justify-content-start align-items-center mb-4 py-2">
-
-                  <h6 class="mb-0 me-4">Gender: </h6>
-
-                  <div class="form-check form-check-inline mb-0 me-4">
-                    <input class="form-check-input" name="gender"  type="radio"  id="femaleGender"
-                      value="option1" />
-                    <label class="form-check-label" for="femaleGender">Female</label>
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" id="form3Example9" name="dob" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example9">DOB</label>
                   </div>
 
-                  <div class="form-check form-check-inline mb-0 me-4">
-                    <input class="form-check-input" type="radio" name="gender" id="maleGender"
-                      value="option2" />
-                    <label class="form-check-label" for="maleGender">Male</label>
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" id="form3Example90" name="username" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example90">Username</label>
                   </div>
 
-                  <div class="form-check form-check-inline mb-0">
-                    <input class="form-check-input" type="radio" name="gender" id="otherGender"
-                      value="option3" />
-                    <label class="form-check-label" for="otherGender">Other</label>
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" id="form3Example99"  name="mobile" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example99">Mobile</label>
+                  </div>
+
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <input type="text" id="form3Example97" name="email" class="form-control form-control-lg" />
+                    <label class="form-label" for="form3Example97">Email ID</label>
+                  </div>
+
+                  <div class="d-flex justify-content-end pt-3">
+                    <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
+                    <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit form</button>
                   </div>
 
                 </div>
-
-                <div class="row">
-                  <div class="col-md-6 mb-4">
-					<label class="form-label" for="form3Example1c">State</label>
-                   <input type="text" id="form3Examplee1c" name="state"  class="form-control form-control-lg" />
-
-                  </div>
-                  <div class="col-md-6 mb-4">
-					<label class="form-label" for="form3Example2c" name="country">Country</label>
-                   <input type="text" id="form3Examplee2c" class="form-control form-control-lg" />
-
-                  </div>
-                </div>
-
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="form3Example9" name="dob" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example9">DOB</label>
-                </div>
-
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="form3Example90" name="username" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example90">Username</label>
-                </div>
-
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="form3Example99"  name="mobile" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example99">Mobile</label>
-                </div>
-
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" id="form3Example97" name="email" class="form-control form-control-lg" />
-                  <label class="form-label" for="form3Example97">Email ID</label>
-                </div>
-
-                <div class="d-flex justify-content-end pt-3">
-                  <button  type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-light btn-lg">Reset all</button>
-                  <button  type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-warning btn-lg ms-2">Submit form</button>
-                </div>
-
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    </div>
   </div>
-</section>
+  <script src="{{url_for('static',filename='assets/js/jquery.js')}}"></script>
+
+<script src="{{url_for('static',filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<script src="{{url_for('static',filename='assets/vendor/swiper/swiper-bundle.min.js')}}"></script><!-- Swiper -->
+<script src="{{url_for('static',filename='assets/vendor/bootstrap-select/dist/js/bootstrap-select.min.js')}}"></script>
+
+<script src="{{url_for('static',filename='assets/js/custom.js')}}"></script>
+</body>
+</html> 

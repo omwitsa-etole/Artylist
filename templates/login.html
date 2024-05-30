@@ -70,7 +70,9 @@
 	<!-- Footer -->
     <div class="footer fixed bg-white">
 		<div class="container">
-			<p><a href="store" style="text-decoration:none;cursor:pointer;"><h4>Browse as Guest</h4></a></p>
+			<p><a href="store" style="text-decoration:none;cursor:pointer;"><h4>Browse as Guest</h4></a>
+				<a href="signup" style="text-decoration:none;cursor:pointer;float:right;">Register</a>
+			</p>
 			<a id="getcode" href="javascript:void(0)" class="btn btn-lg btn-gradient w-100 dz-flex-box btn-shadow rounded-xl">Next</a>
 		</div>
 	</div>
@@ -103,6 +105,7 @@
     module.verify = getVerification
     module.eLogin = emailLogin
 	module.fetch = fetchFunction
+	module.eLogin()
 </script>
 </body>
 </html>

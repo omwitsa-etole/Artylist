@@ -45,6 +45,85 @@
   top: 0;
  
 }
+
+.companies{
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  flex-wrap: nowrap;
+}
+
+.card-item {
+  flex: auto;
+  min-width: 190px;
+  height: 120px;
+  padding: 0.5rem;
+  background: rgba(198, 198, 198, 0.34);
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.440);
+  border-left: 2px  rgba(255, 255, 255, 0.545) outset;
+  box-shadow: -40px 50px 30px rgba(0, 0, 0, 0.280);
+  transform: skewX(10deg);
+  transition: .4s;
+  overflow: hidden;
+  color: white;
+  position: relative;
+}
+
+.card-item:hover {
+  height: 254px;
+  transform: skew(0deg);
+}
+
+.align {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-self: flex-start;
+}
+
+.red {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ff605c;
+  box-shadow: -5px 5px 5px rgba(0, 0, 0, 0.280);
+}
+
+.yellow {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ffbd44;
+  box-shadow: -5px 5px 5px rgba(0, 0, 0, 0.280);
+}
+
+.green {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #00ca4e;
+  box-shadow: -5px 5px 5px rgba(0, 0, 0, 0.280);
+}
+
+.card-item h1 {
+  text-align: center;
+  margin: 1.3rem;
+  color: rgb(218, 244, 237);
+  text-shadow: -10px 5px 10px rgba(0, 0, 0, 0.573);
+}
+.card-buttons{
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+}
+.card-buttons .button{
+  flex: auto;
+}
+
   </style>
 <div class="page-content" style="overflow-y:scroll;">
     <section class="h-100 gradient-custom">
@@ -59,7 +138,7 @@
                 <div class="card-body">
                   <!-- Single item -->
                   {%for item in items%}
-                  <div class="row">
+                  <div class="row" id="cart-item-{{item['id']}}">
                     <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
                       <!-- Image -->
                       <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
@@ -119,13 +198,23 @@
               <div class="card mb-4">
                 <div class="card-body">
                   <p><strong>Expected shipping delivery</strong></p>
-                  <p class="mb-0">12.10.2020 - 14.10.2020</p>
+                  {%if profile["delivery_address"] == None%}
+                  <p class="mb-0">No Delivery Address: <a  href="javascript:void(0);" onclick="module.setAddress('exploreProduct-content')" data-toggle="modal" data-target="#exploreProduct"  class="select-address">Select Address</a></p>
+                  <p class="mb-0">Schedule Pickup <a href="javascript:void(0);" onclick="module.setPickup('exploreProduct-content');" data-toggle="modal" data-target="#exploreProduct" class="select-pickup">Select</a></p>
+                  {%else%}
+                  <p class="mb-0">Fullfilled by : <b>{{profile['delivery_company']}}</b> &nbsp 
+                    <a href="javascript:void(0);" onclick="module.setPickup('exploreProduct-content');" data-toggle="modal" data-target="#exploreProduct" class="select-pickup">Change</a>&nbsp 
+                    <a href="javascript:void(0);" onclick="module.setAddress('exploreProduct-content');" data-toggle="modal" data-target="#exploreProduct" class="select-pickup">Set Address</a>
+                  </p>
+                  
+                  {%endif%}
+                  <p class="mb-0">{{current_date}} - {{future_date}}</p>
                 </div>
               </div>
               <div class="card mb-4 mb-lg-0">
                 <div class="card-body">
                   <p><strong>We accept</strong></p>
-                  <img class="me-2" width="45px" height="40px"
+                  <img class="me-2" width="45px" height="40px" style="width: 45px;"
                     src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
                     alt="Visa" />
                  
@@ -176,13 +265,18 @@
 </script>
 <script type="module">
   import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
-  import {showProduct,showSingle,addCart,addWish} from "{{url_for('static',filename='js/modules/gallery/gallery.js')}}"
+  import {showProduct,showSingle,addCart,addWish,deleteCart} from "{{url_for('static',filename='js/modules/gallery/gallery.js')}}"
+  import {setPickup,setAddress,userSetPickup} from "{{url_for('static',filename='js/modules/profile/profile.js')}}"
   module.fetch = fetchFunction
   module.showProduct= showProduct
     module.showSingle = showSingle
     module.user_id = "{{user_id}}"
   module.addCart = addCart
   module.addWish = addWish
+  module.setAddress = setAddress
+  module.setPickup = setPickup
+  module.userSetPickup = userSetPickup
+  module.deleteCart = deleteCart
 </script>
 {%endblock%}
 

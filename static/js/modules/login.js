@@ -56,13 +56,15 @@ export function getVerification(number,code){
     return false
 }
 
+const server_uri = window.location.protocol.includes('https') ? 'https://'+window.location.host : "https://artylist-b565dccf3eda.herokuapp.com"
+
 export function otpHandler(number,type){
     number = number.replace("+","")
     let dat = {
         number_email:number,
         type:type,
         action:"login-code",
-        url:'http://'+window.location.host+"/api/login/get_code?user_id="+number,
+        url:server_uri+"/api/login/get_code?user_id="+number,
     }
     
     Module.next = [null,number]
@@ -151,21 +153,21 @@ export function numberLogin(){
             <div class="section-head ps-0">
                 <h3>Please Enter your Phone Number</h3>
             </div>
-            <form>
-                <div class="input-group dz-select">
-                    <div class="input-group-text"> 
-                        <div>
-                            <select id="countrycode" class="form-control custom-image-select image-select">
-                                <option data-thumbnail="{{url_for('static',filename='assets/images/flags/kenya.png')}}">+254</option>
-                                <option data-thumbnail="{{url_for('static',filename='assets/images/flags/tz.png')}}">+255</option>
-                                <option data-thumbnail="{{url_for('static',filename='assets/images/flags/uae.png')}}">+971</option>
-                                <option data-thumbnail="{{url_for('static',filename='assets/images/flags/us.png')}}">+1</option>
-                            </select>
-                        </div>
+            <form onsubmit="document.getElementById('getcode');return false;">
+            <div class="input-group dz-select">
+                <div class="input-group-text"> 
+                    <div>
+                        <select id="countrycode" class="form-control custom-image-select image-select">
+                            <option data-thumbnail="{{url_for('static',filename='assets/images/flags/kenya.png')}}">+254</option>
+                            <option data-thumbnail="{{url_for('static',filename='assets/images/flags/tz.png')}}">+255</option>
+                            <option data-thumbnail="{{url_for('static',filename='assets/images/flags/uae.png')}}">+971</option>
+                            <option data-thumbnail="{{url_for('static',filename='assets/images/flags/us.png')}}">+1</option>
+                        </select>
                     </div>
-                    <input type="number" id="number"class="form-control" placeholder="Phone Number">
                 </div>
-            </form>		
+                <input type="number" id="number"class="form-control" placeholder="Phone Number">
+            </div>
+        </form>		
             <p><a id="emailLogin" onclick="module.eLogin()" href="javascript:void(0)">Login with Email</a></p>
         </div>
     </div>

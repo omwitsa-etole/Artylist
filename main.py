@@ -2,6 +2,7 @@ from flask import Flask,render_template, request, session, jsonify,redirect
 import json
 from keys import Key
 from models import *
+from datetime import date, timedelta
 
 app = Flask(__name__)
 
@@ -64,6 +65,27 @@ async def addWish():
         print("wish",cart)
         return jsonify(cart)
     return jsonify(product)
+@app.route("/api/store/deleteCart",methods=["POST","GET"])
+async def deleteCart():
+    id = request.args.get("id")
+    user_id = None
+    if request.method == "POST":
+        data = request.json
+        id = data["id"]
+        user_id = data["user_id"]
+    product = await Cart.find_one(id)
+    print("cart",user_id,product)
+    if product == None:
+        return jsonify({'message':"Item not found","status": 1})
+    #print("user_id",user_id)
+    if user_id:
+        if int(user_id) < 1:
+            return jsonify({'message':"Login to modify cart","status":1})
+        cart = Cart.delete(product['id'],user_id)
+        print("result",cart)
+        if cart:
+            return jsonify({'message':"Item removed from cart","status":0})
+    return jsonify({'message':"Invalid or anaouthorised request","status":1})
 
 @app.route("/api/store/addCart",methods=["POST","GET"])
 async def addCart():
@@ -90,6 +112,13 @@ def logout():
     session.clear()
     return redirect("login")
 
+@app.route("/api/get_companies",methods=["POST"])
+async def getCompanies():
+    if session.get("user") != None:
+        companies = await Company.get_companies()
+        return jsonify({"data":companies})
+    return jsonify({"message":"Anaouthorised request","data":None})
+
 @app.route("/api/login/get_code",methods=["POST"])
 async def loginCode():
     data = {'user_id':None}
@@ -106,6 +135,25 @@ async def loginCode():
     user["status"]  = 0
     print(user)
     return jsonify(user)
+
+@app.route("/api/user/setpickup",methods=["POST"])
+async def setPickup():
+    if session.get("user") != None:
+        data = request.json
+        if data.get('company') == None:
+            return jsonify({"status":1,"message":"Missing Company id"})
+        user_id = session["user"]["user_id"]
+        company = await Company.find(data.get('company'))
+        #print("company",company)
+        if company == None:
+            return jsonify({"status":1,"message":"Company not found or does not offer pickup services"})
+        if company['is_pickup'] == False:
+            return jsonify({"status":1,"message":"Company  does not offer pickup services"})
+        result = await User.set_pickup(user_id,company)
+        print("result",result)
+        if result:
+            return jsonify({"status":0,"message":"Pickup added to user profile"})
+    return jsonify({"status":1,"message":"Incomplete or Invalid request"})
 
 @app.route("/api/login",methods=["POST"])
 async def apiLogin():
@@ -133,6 +181,11 @@ async def register():
         gender = request.form['gender']
         mobile = request.form['mobile']
         password = None
+        if len(mobile) < 10 or len(mobile) > 12:
+            msg = "Invalid Phone Number"
+            return render_template("register.html",msg=msg)
+        if mobile.startswith("0") and len(mobile) == 10:
+            mobile = "254" + mobile[1:]
         user = await User.create_user(username,email,password,mobile,address,name,gender)
         if user['status'] != 0:
             return render_template("register.html",msg=user['message'])
@@ -183,6 +236,10 @@ async def cart():
     user_id = session.get("user")['user_id']
     items = await Cart.find(user_id)
     orders = await Order.get_orders(user_id)
+    companies = await Company.get_companies()
+    profile = await User.get_profile(user_id,payment_methods=None,companies=companies)
+    current_date = date.today()
+    future_date = current_date + timedelta(days=5)
     total = 0
     shipping = 0
     for i in items:

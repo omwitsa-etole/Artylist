@@ -94,6 +94,21 @@ export function addCart(item_id){
     })
 }
 
+export function deleteCart(id){
+    module.fetch("/api/store/deleteCart",{id:id,user_id:module.user_id},"POST",function(data){
+        console.log(data)
+        if(data.message){
+            
+        }
+        if(data.status == 0){
+            $("#cart-item-"+id).remove();
+            //alert("Item removed from cart")
+        }else{
+            alert(data.message)
+        }
+    })
+}
+
 export function showSingle(id){
     if(id == undefined){
         console.error("no prodct id")

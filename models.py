@@ -15,7 +15,7 @@ class Payments:
         return self
 
 class Profile:
-    def __init__(self,id,user_id,fullname,age,gender,address,avatar,language,payment,intersets,price_range,created,updated,payment_methods=None):
+    def __init__(self,id,user_id,fullname,age,gender,address,avatar,language,payment,intersets,price_range,created,updated,delivery_address,payment_methods=None,companies=None):
         self.id = id
         self.user_id = user_id
         self.fullname = fullname
@@ -28,6 +28,12 @@ class Profile:
         self.language = language
         self.intersets = intersets.split(",")
         self.price_range = price_range.split(",")
+        self.delivery_address = delivery_address
+        self.delivery_company = int(delivery_address)
+        if companies:
+            for c in companies:
+                if c['company'] == self.delivery_company or c['id'] == self.delivery_company:
+                    self.delivery_company = c['name']
         if payment_methods:
             for i in payment_methods:
                 if i['id'] == self.default_payment:
@@ -36,7 +42,7 @@ class Profile:
         return self.__dict__
 
 class Business:
-    def __init__(self,id,company,name,trade_name,address,is_default,inactive,tax_id,type,currency,email,phone,logo):
+    def __init__(self,id,company,name,trade_name,address,is_default,inactive,tax_id,type,currency,email,phone,logo,is_pickup,coordinates):
         self.id = id
         self.company = company
         self.name = name
@@ -50,6 +56,8 @@ class Business:
         self.email = email
         self.phone = phone
         self.logo = logo
+        self.is_pickup = bool(is_pickup)
+        self.coordinates = coordinates.split(":")
     def to_dict(self):
         return self.__dict__
 
@@ -99,7 +107,7 @@ class Product:
         pass
 
 class Order_Item:
-    def __init__(self,id,user_id,item_id,order_id,name,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,deleted,groups=None,companies=None,products=None):
+    def __init__(self,id,user_id,item_id,order_id,name,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,deleted,groups=None,companies=None,products=None,items=None):
         self.id = id
         self.item_id = item_id
         self.order_id = order_id
@@ -120,6 +128,11 @@ class Order_Item:
                     self.company = p['company']
                     self.group = p['item_group']
                     self.image = p['image']
+        if items:
+            for i in items:
+                if i[0] == self.item_id:
+                    self.image = i[1] if 'http' in i[1] else api_url+i[1]
+                    self.company = i[2]
         pass
     def to_dict(self):
         return self.__dict__
@@ -161,33 +174,37 @@ class User:
         else:
             return None
     @staticmethod
-    async def get_profile(user_id,payment_methods=None):
+    async def get_profile(user_id,payment_methods=None,companies=None,count=1):
+        if count > 2:
+            return None
         query = await DatabaseManager.query(f"SELECT * from user_profile where user_id=%s"%user_id)
         if query:
-            profile = Profile(*query[0],payment_methods=payment_methods)
+            profile = Profile(*query[0],payment_methods=payment_methods,companies=companies)
             profile = profile.to_dict()
             return profile
         else:
-            query = DatabaseManager.insert(f"INSERT INTO user_profile (user_id) VALUES (%d)"%user_id)
-            profile = await User.get_profile(user_id)
+            query = DatabaseManager.insert(f"INSERT INTO user_profile (user_id,interests) VALUES (%d, 'all')"%user_id)
+            profile = await User.get_profile(user_id,payment_methods=payment_methods,companies=companies,count=count+1)
             return profile
             
     @staticmethod
     async def create_user(username,email,password,mobile,address,fullname,gender):
-        query = await DatabaseManager.query(f"select * from users where username=%s"%username)
+        query = await DatabaseManager.query(f"select * from users where username='%s'"%username)
         if query and len(query) > 0:
             return {'message':'User already exists','status': 1}
-        query = await DatabaseManager.query(f"select * from users where email=%s"%email)
+        query = await DatabaseManager.query(f"select * from users where email='%s'"%email)
         if query and len(query) > 0:
             return {'message':'User with email already exists','status': 1}
-        query = await DatabaseManager.query(f"select * from users where mobile=%s"%mobile)
+        query = await DatabaseManager.query(f"select * from users where mobile='%s'"%mobile)
         if query and len(query) > 0:
             return {'message':'User with mobile already exists','status': 1}
-        new = DatabaseManager.insert(f"insert into users (username,email,mobile,password,group_id,user_id) values(%s,%s,%s,%s,%d,'0')"%(username,email,mobile,password,3))
+        new = DatabaseManager.insert(f"insert into users (company,username,email,mobile,password,group_id,user_id) values(1000,'%s','%s','%s','%s',%d,'0')"%(username,email,mobile,password,3))
         if new:
-            new = await DatabaseManager.query(f"select * from users where email=%s"%email)
+            new = await DatabaseManager.query(f"select * from users where email='%s'"%email)
+            if new is None or len(new) == 0:
+                return {'message':'Error inserting record, try again','status': 1}
             new = new[0]
-            profile = DatabaseManager.insert(f"insert into user_profile (user_id,address,fullname,gender,language) values(%s,%s,%s,%s,'English')"%(new[0],address,fullname,gender))
+            profile = DatabaseManager.insert(f"insert into user_profile (user_id,address,fullname,gender,language,interests) values('%s','%s','%s','%s','English','all')"%(new[0],address,fullname,gender))
             return {'message':'New User account created, login to continue','status': 0} 
         pass
     @staticmethod
@@ -201,7 +218,7 @@ class User:
         if user[0]:
             profile = await DatabaseManager.query(f"SELECT * from user_profile where user_id=%d"%user[0])
             if profile == None or len(profile) == 0:
-                new_profile = DatabaseManager.insert(f"INSERT INTO user_profile (user_id) VALUES (%d)"%user[0])
+                new_profile = DatabaseManager.insert(f"INSERT INTO user_profile (user_id,interests) VALUES (%d,'all')"%user[0])
                 if new_profile:
                     profile = await DatabaseManager.query(f"SELECT * from user_profile where user_id=%d"%user[0])
                     if profile:
@@ -239,9 +256,24 @@ class User:
         for i in str(code):
             newcode = ""+i
         return {'code':code,'mobile':mobile,'email':email}
+    @staticmethod
+    async def set_pickup(user_id,company):
+        query = DatabaseManager.update(f"update user_profile set delivery_company='%s' where user_id=%d"%(company['company'],user_id))
+        if query == None:
+            return None
+        return query
 
 
 class Company:
+    @staticmethod
+    async def find(id):
+        results = await DatabaseManager.query("SELECT * from business where id='%s' or company='%s'"%(id,id))
+        if results == None or len(results) == 0:
+            return None
+        
+        business = Business(*results[0])
+        return business.to_dict()
+        #return bs
     @staticmethod
     async def get_companies():
         results = await DatabaseManager.query("SELECT * from business")
@@ -309,25 +341,35 @@ class Cart:
     @staticmethod
     async def add(item,user_id,qty=1):
         #print("query",(f"INSERT INTO sales_order_item (user_id,item_id, order_id,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount) VALUES (%s,%d, %s,'%s','%s','%s','%s','%s','%s','%s')"%(user_id,item['id'],None,item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty)))
-        query = DatabaseManager.insert(f"INSERT INTO sales_order_item (user_id,item_id, order_id,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount) VALUES (%s,%d, '%s','%s','%s','%s','%s','%s','%s','%s')"%(user_id,item['id'],None,item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty))
+        query = DatabaseManager.insert(f"INSERT INTO sales_order_item (user_id,item_id,item_name, description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,company) VALUES (%s,%d,'%s','%s','%s','%s','%s','%s','%s','%s',%d)"%(user_id,item['id'],item['name'],item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty,int(item['company'])))
         if query == None:
             return None
         return await Cart.find(user_id)
         pass
     @staticmethod
     async def find(user_id):
+        images = await DatabaseManager.query(f"SELECT id,image_path,company from product_item where deleted_at is NULL")
+
         query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE user_id=%s" % user_id)
         if query == None or len(query) == 0:
             return []
         rs = []
+        
         for r in query:
-            r = Order_Item(*r)
+            r = Order_Item(*r,items=images)
             rs.append(r.to_dict())
         return rs
         pass
     @staticmethod
-    async def delete(uid):
-        query = await DatabaseManager.query(f"DELETE FROM sales_order_item where id=%s" % uid)
+    async def find_one(id):
+        query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE id=%s" % id)
+        if query == None or len(query) == 0:
+            return None
+        r = Order_Item(*query[0])
+        return r.to_dict()
+    @staticmethod
+    async def delete(uid,user_id):
+        query = await DatabaseManager.query(f"DELETE FROM sales_order_item where id='%s' and user_id='%s'" % (uid,user_id))
         if query != None:
             return True
         else:
