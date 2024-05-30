@@ -1,5 +1,6 @@
 from db import *
 import random
+from datetime import date, timedelta
 
 #api_url = 'http://localhost:8080/'
 api_url = 'https://posdesk-8a71a5fe3d60.herokuapp.com/'
@@ -350,7 +351,7 @@ class Cart:
     async def find(user_id):
         images = await DatabaseManager.query(f"SELECT id,image_path,company from product_item where deleted_at is NULL")
 
-        query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE user_id=%s" % user_id)
+        query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE user_id=%s and deleted_at is NULL" % user_id)
         if query == None or len(query) == 0:
             return []
         rs = []
@@ -369,7 +370,10 @@ class Cart:
         return r.to_dict()
     @staticmethod
     async def delete(uid,user_id):
-        query = await DatabaseManager.query(f"DELETE FROM sales_order_item where id='%s' and user_id='%s'" % (uid,user_id))
+        update = DatabaseManager.update(f"update sales_order_item set deleted_at='%s' where id=%s and user_id=%s"%(date.today(),uid,user_id))
+        if not update:
+            return False
+        query = await DatabaseManager.query(f"DELETE FROM sales_order_item where id=%s and user_id=%s" % (uid,user_id))
         if query != None:
             return True
         else:

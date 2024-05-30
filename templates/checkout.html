@@ -295,6 +295,7 @@
   }
 
     </style>
+    <script>const module = {}</script>
     <div class="container bg-light d-md-flex align-items-center space-top" > 
         <div class="card box1 shadow-sm p-md-5 p-md-5 p-4"> 
             <div class="fw-bolder mb-4">
@@ -311,7 +312,7 @@
                 <div class="d-flex align-items-center justify-content-between text mb-4"> 
                     <span>Total</span> 
                     <span class="fas fa-dollar-sign">
-                        <span class="ps-1">{{discounts-total}}</span>
+                        <span class="ps-1">{{total - discounts}}</span>
                     </span> 
                 </div> 
                 <div class="border-bottom mb-4"></div> 
@@ -325,7 +326,7 @@
                         <span class="far fa-calendar-alt text">
                             <span class="ps-2">Date today:</span>
                         </span> 
-                        <span class="ps-3"><script>new Date().toUTCString()</script></span> 
+                        <span class="ps-3">{{today}}</span> 
                     </div> 
                     <div class="d-flex align-items-center justify-content-between text mt-5"> 
                         <div class="d-flex flex-column text"> 
@@ -357,7 +358,7 @@
                             <div class="col-12"> 
                                 <div class="d-flex flex-column px-md-5 px-4 mb-4"> <span>Credit Card</span> 
                                     <div class="inputWithIcon"> 
-                                        <input class="form-control" type="text" placeholder="5136 1845 5468 3894"> 
+                                        <input class="form-control" name="card" type="text" placeholder="5136 1845 5468 3894"> 
                                         <span class=""> 
                                             <img src="https://www.freepnglogos.com/uploads/mastercard-png/mastercard-logo-logok-15.png" alt="">
                                         </span> 
@@ -369,7 +370,7 @@
                                     <span>Expiration<span class="ps-1">Date</span>
                                 </span> 
                                 <div class="inputWithIcon">
-                                        <input type="text" class="form-control" placeholder="05/20"> 
+                                        <input type="text" name="date" class="form-control" placeholder="05/20"> 
                                         <span class="fas fa-calendar-alt"></span> 
                                     </div> 
                                 </div> 
@@ -378,7 +379,7 @@
                                 <div class="d-flex flex-column pe-md-5 px-md-0 px-4 mb-4"> 
                                     <span>Code CVV</span> 
                                     <div class="inputWithIcon"> 
-                                        <input type="password" class="form-control" placeholder="123"> 
+                                        <input type="password" name="cvv" class="form-control" placeholder="123"> 
                                         <span class="fas fa-lock"></span> 
                                     </div> 
                                 </div> 
@@ -387,20 +388,27 @@
                                 <div class="d-flex flex-column px-md-5 px-4 mb-4"> 
                                     <span>Name</span> 
                                     <div class="inputWithIcon"> 
-                                        <input class="form-control text-uppercase" type="text" value=""> 
+                                        <input class="form-control text-uppercase" name="card-name"type="text" value=""> 
                                         <span class="far fa-user"></span> 
                                     </div> 
                                 </div> 
                             </div> 
                             <div class="col-12 px-md-5 px-4 mt-3"> 
-                                <button class="btn btn-primary w-100">Pay KES {{total}}</button> 
+                                <button class="btn btn-primary w-100 card-pay" type="button">Pay KES {{total}}</button> 
                             </div> 
                         </div> 
                     </form> 
                 </div> 
     </div>
+    <form style="display: none;" id="checkout-form" method="post">
+        <input name="checkout_id"/>
+        <input type="hidden" name="merchant_id">
+        <input type="hidden" name="amount_paid">    
+    </form>
+    <script src="{{url_for('static',filename='assets/js/jquery.js')}}"></script>
     <script>
-        var main = null
+        const urli = 'https://posdesk-8a71a5fe3d60.herokuapp.com';
+        var main = null;
         function mobilePayment(){
             const body = document.getElementById("paymentForm")
             if(main===null){main=body.innerHTML}
@@ -438,9 +446,9 @@
             </div>
 
             <div class="col-12"> 
-                <div class="d-flex flex-column px-md-5 px-4 mb-4"> <span>Mobile Numbert</span> 
+                <div class="d-flex flex-column px-md-5 px-4 mb-4"> <span>Mobile Number</span> 
                     <div class="inputWithIcon"> 
-                        <input class="form-control" type="text" placeholder="254 71234 5678"> 
+                        <input class="form-control" id="phone" type="text" placeholder="254 71234 5678"> 
                         <span class=""> 
                             <img src="https://www.freepnglogos.com/uploads/mastercard-png/mastercard-logo-logok-15.png" alt="">
                         </span> 
@@ -448,17 +456,9 @@
                 </div> 
             </div> 
             
-            <div class="col-12"> 
-                <div class="d-flex flex-column px-md-5 px-4 mb-4"> 
-                    <span>Name</span> 
-                    <div class="inputWithIcon"> 
-                        <input class="form-control text-uppercase" type="text" value=""> 
-                        <span class="far fa-user"></span> 
-                    </div> 
-                </div> 
-            </div> 
+           
             <div class="col-12 px-md-5 px-4 mt-3"> 
-                <button class="btn btn-primary w-100">Pay KES {{total}}</button> 
+                <button class="btn btn-primary w-100 phone-pay" type="button" onclick="module.requestPay()">Pay KES {{total}}</button> 
             </div> 
             `
         }
@@ -470,6 +470,111 @@
             }
             
         }
+
+        module.payNow = (data) =>{
+            console.log("paynow data",data)
+            $('input[name="checkout_id"]').val(data.checkout_id)
+            $('input[name="merchant_id"]').val(data.merchant_id)
+            $('input[name="amount_paid"]').val(data.amount)
+            $(".error").html(`Checkout Initiated validate on your phone...<br>Querying....`)
+            setTimeout(function(){
+                module.payQuery(data.checkout_id);
+                module.next = [function(){
+                    $("#checkout-form").submit()
+                },null]
+            },2500)
+            
+        }
+
+        module.requestPay =() =>{
+            let phone = $("#phone").val()
+            var carrier = $('input[name="carrier"]:checked').map(function() {
+                return this.value;
+            }).get();
+            
+            if (phone.startsWith('0') && phone.length === 10) {
+                
+                phone = phone.replace('0', '254');
+            }
+            console.log(phone,carrier)
+            let pay_data = {
+                'action':'stk-pay',
+                'phone':phone,
+                'amount':parseInt('{{total - discounts}}'),
+                'description':"paybill online",
+                'reference':'PAYBILL',
+                'callback':urli+'/customer/pay'
+            }
+            console.log(pay_data)
+            //payload.amount_paid = pay_data['amount'];
+            module.next = [module.payNow,pay_data];
+            $('.error').html(`Initiating socket request... Sending Data .. `)
+            module.websocket.send(JSON.stringify(pay_data));
+            document.getElementById("exploreProduct").classList.add('show');
+            document.getElementById("exploreProduct").style.display = 'block'
+            $("#exploreProduct-content").html(`<p class="error"></p>`)
+            $('.error').html(`Initiating socket request... Sending Data .. `)
+        }
+        
+        const wsurl = "wss://wsmain-f4c459715e93.herokuapp.com/"
+        //const wsurl = 'ws://localhost:5001/'
+        module.websocket = new WebSocket(wsurl);
+        module.next = null
+        
+
+        module.payQuery = (checkout_id) =>{
+            let query_data = {
+                'action':'stk-query',
+                'checkout_id':checkout_id,
+                'phone':null,
+                'receipt_number':null
+            }
+            $('.error').append(`<br>Initiating socket request... Sending Data .. `)
+            module.websocket.send(JSON.stringify(query_data))
+        }
+
+        module.websocket.addEventListener("message", async ({ data }) => {
+            const event = JSON.parse(data);
+            data = event;
+            console.log("socket message=>",data);
+            
+            if(data.message){
+                $('.error').append(`<br><h4>${data.message}</h4>`)
+            }
+            data.status = data.ResponseCode
+
+            if(data.ResultCode){
+                if(data.ResultCode != '0'){
+                    
+                    $('.error').html(`Payment incomplete with message : <br> ${data.ResultDesc}`);
+                    module.next = null;
+                }else{
+                    $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
+                    await module.next[0](module.next[1]);
+                    module.next = null;
+                }
+            }
+
+            if(data.status && data.status != '01'){
+                if(module.next !== null){
+                    let payload = module.next[1];
+                    payload.checkout_id = data.CheckoutRequestID ? data.CheckoutRequestID : null;
+                    payload.merchant_id = data.MerchantRequestID ? data.MerchantRequestID : null;
+                    $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
+                    await module.next[0](payload);
+
+                    module.next = null;
+                }
+            }else{
+                $('.error').append(`<br>Payment initiiation failed with status : ${data.message ? data.message : data}`)
+            }
+            
+            // do something with event
+        });
+        module.websocket.addEventListener('open', () => {
+            // Send the ID to the WebSocket server after the connection is established
+            module.websocket.send(JSON.stringify({ type: 'id', id: "<?= Session::get('username')?>" }));
+        });
         </script>
 
 {%endblock%}

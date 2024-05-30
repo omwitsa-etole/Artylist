@@ -44,14 +44,16 @@ export function showProduct(data){
         $('.add-cart').click(function(e) {
             let id = e.currentTarget.id;
             console.log(id)
-            module.fetch("/api/store/addCart",{item_id:id,user_id:module.user_id},"POST",function(data){
-                console.log(data)
-            })
+            
             var child = $(this).children().last();
             console.log($(this).children().last())
             if(child.hasClass("fa-cart-shopping")){
+                module.fetch("/api/store/addCart",{item_id:id,user_id:module.user_id},"POST",function(data){
+                    console.log(data)
+                })
                 child.removeClass("fa-cart-shopping")
                 child.addClass("fa-check")
+
             }else{
                 
                 child.addClass("fa-cart-shopping")

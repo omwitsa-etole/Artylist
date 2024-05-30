@@ -81,7 +81,7 @@ async def deleteCart():
     if user_id:
         if int(user_id) < 1:
             return jsonify({'message':"Login to modify cart","status":1})
-        cart = Cart.delete(product['id'],user_id)
+        cart = await Cart.delete(product['id'],user_id)
         print("result",cart)
         if cart:
             return jsonify({'message':"Item removed from cart","status":0})
@@ -279,12 +279,13 @@ async def checkout():
     
     items = await Cart.find(user_id)
     orders = await Order.get_orders(user_id)
+    today = date.today()
     total = 0
     shipping = 0
     discounts = 0
     taxes = 0
     for i in items:
-        discount += i['discount_amount']
+        discounts += i['discount_amount']
         taxes += i['unit_price']*i['tax_rate']
         total += i['unit_price'] - i['discount_amount']
     order_id = await Order.get_next()
