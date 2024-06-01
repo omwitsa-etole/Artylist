@@ -30,7 +30,7 @@ class Profile:
         self.intersets = intersets.split(",")
         self.price_range = price_range.split(",")
         self.delivery_address = delivery_address
-        self.delivery_company = int(delivery_address)
+        self.delivery_company = int(delivery_address) if  delivery_address else None
         if companies:
             for c in companies:
                 if c['company'] == self.delivery_company or c['id'] == self.delivery_company:
