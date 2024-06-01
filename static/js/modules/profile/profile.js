@@ -1,3 +1,57 @@
+
+function initMap(elementId) {
+    // Check if geolocation is supported
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            // Get current location
+            const currentLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+
+            // Create a map centered at the current location
+            const map = new google.maps.Map(document.getElementById(elementId), {
+                center: currentLocation,
+                zoom: 15
+            });
+
+            // Create a marker at the current location
+            let marker = new google.maps.Marker({
+                position: currentLocation,
+                map: map,
+                title: "Current Location"
+            });
+
+            // Add a click listener to the map to update marker position
+            map.addListener('click', function(event) {
+                // Update marker position
+                marker.setPosition(event.latLng);
+
+                // Log the new marker position
+                console.log("Current Lat: " + event.latLng.lat() + ", Lng: " + event.latLng.lng());
+                $(".save-address").on("click",function(){
+                    $(".save-address").text('saving')
+                    module.fetch("/api/user/setAddress",{lat: event.latLng.lat(),lng: event.latLng.lng()},"post",function(){
+                        $(".save-address").text('save')
+                    })
+                })
+            });
+        }, function() {
+            // Handle location error
+            handleLocationError(true, map.getCenter());
+        });
+    } else {
+        // Browser doesn't support Geolocation
+        handleLocationError(false, map.getCenter());
+    }
+}
+
+function handleLocationError(browserHasGeolocation, pos) {
+    console.log(browserHasGeolocation ?
+        "Error: The Geolocation service failed." :
+        "Error: Your browser doesn't support geolocation.");
+}
+
 export function setPickup (id){
     document.getElementById("exploreProduct").classList.add('show');
     document.getElementById("exploreProduct").style.display = 'block'
@@ -45,11 +99,16 @@ export function setPickup (id){
 }
 
 export function setAddress(id){
+    $('.modal-footer').append(`<a class="btn btn-default save-address">Save</a>`)
     document.getElementById("exploreProduct").classList.add('show');
     document.getElementById("exploreProduct").style.display = 'block'
     $(`#${id}`).html(`
         <h4>Address</h4>
+        <>Loading ...<i calss="fa fa-spinner"></i>
     `)
+    document.getElementById(id).style.height =  "59vh"
+    
+    initMap(id);
 }
 
 export function userSetPickup(company){

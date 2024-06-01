@@ -11,7 +11,7 @@ function allProducts(data){
                 <div class="left-content">
                     <span class="badge badge-primary d-inline-flex gap-1 mb-2">
                         <i class="fa fa-money-bill"></i><span>KES</span><b>${data.unit_price}</b></span>
-                    <h4 class="title"><a href="profile-detail.html">${data.name}, ${data.company}</a></h4>
+                    <h4 class="title">${data.name},<a href="/profile/${data.company_id}"> ${data.company}</a></h4>
                     <ul class="intrest">
                         <li><span class="badge">${data.item_group}</span></li>
                         <li><span class="badge">${data.discount_rate} % OFF</span></li>
@@ -23,7 +23,7 @@ function allProducts(data){
                 <a href="javascript:void(0);" onclick="module.addWish('${data.id}')" class="dz-icon dz-sp-like add-wish">
                     <i class="fa fa-heart"></i></a>
                 <a href="javascript:void(0);" id="${data.id}" class="dz-icon dz-sp-like add-cart">
-                    <i class="fa fa-cart-shopping"></i></a>
+                    <i class="fa fa-cart-shopping shopping-icon"></i></a>
             </div>
            
             <div class="dzSwipe_card__option dzSuperlike">
@@ -85,8 +85,10 @@ export function addWish(item_id){
 }
 
 export function addCart(item_id){
+    $(".shopping-icon").removeClass('fa-shopping-cart').addClass('fa-spinner');
     module.fetch("/api/store/addCart",{item_id:item_id,user_id:module.user_id},"POST",function(data){
         console.log(data)
+        $(".shopping-icon").removeClass('fa-spinner').addClass('fa-shopping-cart');
         if(data.message){
             alert(data.message)
         }
@@ -97,13 +99,20 @@ export function addCart(item_id){
 }
 
 export function deleteCart(id){
+    $(".delete-icon-"+id).removeClass('fa-trash').addClass('fa-spinner');
     module.fetch("/api/store/deleteCart",{id:id,user_id:module.user_id},"POST",function(data){
-        console.log(data)
-        if(data.message){
-            
-        }
+        console.log("cart",data)
+        $(".delete-icon-"+id).removeClass('fa-spinner').addClass('fa-trash');
+        
         if(data.status == 0){
+            $(".cart-length").text(data.cart.length)
             $("#cart-item-"+id).remove();
+            let total = 0.0;
+            for(const c of data.cart){
+                total += float(c.amount);
+            }
+            $(".product-total").text(total)
+            $(".cart-total").text(total)
             //alert("Item removed from cart")
         }else{
             alert(data.message)
@@ -133,13 +142,15 @@ export function showSingle(id){
                    
                     <div class="project-info-box">
                         <p class="mb-0">${data.description}.</p>
-                        <p><b>Client:</b> ${data.company}</p>
+                        <p><b>Creator:</b> ${data.company}</p>
                         <p><b>Date:</b> ${data.created_at}</p>
                         <p><b>Name:</b> ${data.name}</p>
                         <p><b>Tools:</b> ${data.item_group}</p>
                         <p class="mb-0"><b>Budget:</b> KES ${data.unit_price}</p>
+                        <p>
+                            <a href="javascript:void(0);"  onClick='module.addCart("${data.id}")' class="dz-icon"><i class="fa fa-shopping-cart shopping-icon"></i></a>
+                        </p>
                         <p class="mb-0">
-                           <button class="add-cart" onClick='module.addCart("${data.id}")'>Add to Cart<i class="fa fa-shopping-cart"></i></button>
                            <button onclick="document.getElementById('exploreProduct').classList.remove('show');document.getElementById('exploreProduct').style.display=''">Cancel</button>
                         </p>
                     </div><!-- / project-info-box -->

@@ -84,9 +84,10 @@ async def deleteCart():
         if int(user_id) < 1:
             return jsonify({'message':"Login to modify cart","status":1})
         cart = await Cart.delete(product['id'],user_id)
-        print("result",cart)
+        
+        items = await Cart.find(user_id)
         if cart:
-            return jsonify({'message':"Item removed from cart","status":0})
+            return jsonify({'message':"Item removed from cart","status":0,"cart":items})
     return jsonify({'message':"Invalid or anaouthorised request","status":1})
 
 @app.route("/api/store/addCart",methods=["POST","GET"])
@@ -259,6 +260,27 @@ async def detail(id):
         user_id = session["user"]["user_id"]
     return jsonify(**locals())
 
+@app.route("/profile-detail.html")
+@app.route("/profile/<int:id>")
+async def profileDetail(id):
+    if id:
+        profile = await Company.find(id)
+        groups = await Company.get_groups(id)
+        products = await Company.get_products(id)
+        print("profile",profile)
+        #print("groups",groups)
+    return render_template("profile-detail.html",**locals())
+
+@app.route("/invoice/<int:id>")
+async def orderDetail(id):
+    if id:
+        order = await Order.find(id)
+        items = await Cart.find_orders(id)
+        print("order",order)
+        #print("items",items)
+    return render_template("invoice.html",**locals())
+
+
 @app.route("/wishlist")
 async def wish():
     if session.get("user") == None:
@@ -296,7 +318,7 @@ async def checkout():
         merchant_id = request.form['merchant_id']
         amount = request.form['amount_paid']
         
-        new_order = await Order.add(user_id=user_id,cart=items,checkout=checkout_id,merchant=merchant_id,amount_paid=amount)
+        new_order = await Order.add(user_id=user_id,cart=items,checkout=checkout_id,merchant=merchant_id,amount_paid=amount,customer=session['user']['username'])
     #order_id = "SN8478042099"
     return render_template("checkout.html",**locals())
 

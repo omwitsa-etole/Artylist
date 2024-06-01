@@ -123,9 +123,43 @@
 .card-buttons .button{
   flex: auto;
 }
+.track-line {
+height: 2px !important;
+background-color: #488978;
+opacity: 1;
+}
 
+.dot {
+height: 10px;
+width: 10px;
+margin-left: 3px;
+margin-right: 3px;
+margin-top: 0px;
+background-color: #488978;
+border-radius: 50%;
+display: inline-block
+}
+
+.big-dot {
+height: 25px;
+width: 25px;
+margin-left: 0px;
+margin-right: 0px;
+margin-top: 0px;
+background-color: #488978;
+border-radius: 50%;
+display: inline-block;
+}
+
+.big-dot i {
+font-size: 12px;
+}
+
+.card-stepper {
+z-index: 0
+}
   </style>
-<div class="page-content" style="overflow-y:scroll;">
+<div class="page-content" style="overflow-y: scroll;height: 100vh;">
     <section class="h-100 gradient-custom">
         <div class="container py-5">
           <div class="row d-flex justify-content-center my-4">
@@ -133,7 +167,7 @@
               <div class="card mb-4">
                 
                 <div class="card-header py-3">
-                  <h5 class="mb-0">Cart - {{items|length}} items</h5>
+                  <h5 class="mb-0">Cart - <b class="cart-length">{{items|length}}</b> items</h5>
                 </div>
                 <div class="card-body">
                   <!-- Single item -->
@@ -158,7 +192,7 @@
                       <p>Discount: {{item['discount_amount']}}</p>
                       <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
                         title="Remove item" onclick="module.deleteCart('{{item["id"]}}')">
-                        <i class="fas fa-trash"></i>
+                        <i class="fas fa-trash delete-icon-{{item['id']}}"></i>
                       </button>
                       <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip" onclick="module.addWish('{{item["item_id"]}}')"
                         title="Move to the wish list">
@@ -232,7 +266,7 @@
                     <li
                       class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                       Products
-                      <span>KES {{total}}</span>
+                      <span>KES <b class="product-total">{{total}}</b></span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0">
                       Shipping
@@ -246,7 +280,7 @@
                           <p class="mb-0">(including VAT)</p>
                         </strong>
                       </div>
-                      <span><strong>KES {{total}}</strong></span>
+                      <span><strong>KES <i class="cart-total">{{total}}</i></strong></span>
                     </li>
                   </ul>
       
@@ -256,6 +290,68 @@
                 </div>
               </div>
             </div>
+
+            <div class="col-md-12" style="margin-top: 15px;">
+              <div class="card mb-4">
+                
+                <div class="card-header py-3">
+                  <h5 class="mb-0">Orders - <b class="cart-length">{{orders|length}}</b> items</h5>
+                </div>
+                <div class="card-body">
+                  <!-- Single item -->
+                  {%for item in orders%}
+                  <div class="row d-flex justify-content-center align-items-center h-100">
+                    <div class="col">
+                      <div class="card card-stepper" style="border-radius: 10px;">
+                        <div class="card-body p-4">
+              
+                          <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex flex-column">
+                              <span class="lead fw-normal">Your order has been delivered</span>
+                              <span class="text-muted small">by DHFL on 21 Jan, 2020</span>
+                            </div>
+                            <div>
+                              <a data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary" type="button" href="/invoice/{{item['order_number']}}">Track order details</a>
+                            </div>
+                          </div>
+                          <hr class="my-4">
+              
+                          <div class="d-flex flex-row justify-content-between align-items-center align-content-center">
+                            <span class="dot"></span>
+                            <hr class="flex-fill track-line"><span class="dot"></span>
+                            <hr class="flex-fill track-line"><span class="dot"></span>
+                            <hr class="flex-fill track-line"><span class="dot"></span>
+                            <hr class="flex-fill track-line"><span
+                              class="d-flex justify-content-center align-items-center big-dot dot">
+                              <i class="fa fa-check text-white"></i></span>
+                          </div>
+              
+                          <div class="d-flex flex-row justify-content-between align-items-center">
+                            <div class="d-flex flex-column align-items-start"><span>15 Mar</span><span>Order placed</span>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center"><span>15 Mar</span><span>Order
+                                placed</span></div>
+                            <div class="d-flex flex-column justify-content-center align-items-center"><span>15
+                                Mar</span><span>Order Dispatched</span></div>
+                            <div class="d-flex flex-column align-items-center"><span>15 Mar</span><span>Out for
+                                delivery</span></div>
+                            <div class="d-flex flex-column align-items-end"><span>15 Mar</span><span>Delivered</span></div>
+                          </div>
+              
+                        </div>
+                      </div>
+                    </div>
+                  {%endfor%}
+                  <!-- Single item -->
+      
+                  <hr class="my-4" />
+      
+                  
+                </div>
+              </div>
+              
+            </div>
+
           </div>
         </div>
       </section>

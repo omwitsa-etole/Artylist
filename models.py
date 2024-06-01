@@ -56,21 +56,23 @@ class Business:
         self.currency = currency
         self.email = email
         self.phone = phone
-        self.logo = logo
+        self.logo = logo if logo != None else "https://th.bing.com/th/id/OIP.2AmwrTnE_ys6QNCFe6iKRwHaHa?rs=1&pid=ImgDetMain"
         self.is_pickup = bool(is_pickup)
         self.coordinates = coordinates.split(":")
     def to_dict(self):
         return self.__dict__
 
 class ProductGroup:
-    def __init__(self,id,name,enabled,code,default_supplier,created_user,is_default,parent,created,updated):
+    def __init__(self,id,name,enabled,code,default_supplier,created_user,is_default,parent,created,updated,company,deleted):
         self.id = id
         self.name = name
         self.enabled = bool(enabled)
         self.code = code
         self.created_by = created_user
         self.parent = parent
+        self.company = company
         self.is_default = bool(is_default)
+        self.deleted = deleted
     def to_dict(self):
         return self.__dict__
 
@@ -78,6 +80,7 @@ class Product:
     def __init__(self,id,company,code,group,name,quantity,enabled,is_sales,description,image,group_id,is_purchase,reorder,min,cost,price,tax_rate,discount,cashier,created,updated,deleted,groups=None,companies=None):
         self.id = id
         self.company = company
+        self.company_id = company
         self.item_code = code
         self.item_group = group_id
         self.description= description
@@ -146,7 +149,7 @@ class Order_Invoice:
         self.company = company
         self.amounts_tax = amounts_tax
         self.amount_paid = amount_paid
-        self.amount_due = amount_due
+        self.amount_due = amount_due if amount_due else balance_due
         self.status = status
         self.paid_status = bool(paid)
         self.customer = customer
@@ -156,8 +159,9 @@ class Order_Invoice:
         self.merchant_id = merchant_id
         self.shipping_address = shipping
         self.notes = notes
-        self.created_at = created
+        self.created_at = updated_at
         self.deleted = deleted
+        self.order_number = order_num
         #self.user = user_id
         pass
     def to_dict(self):
@@ -234,7 +238,7 @@ class User:
         #    profile = profile.to_dict()
             print("validate",password==str(user[5]),str(user[4])==password,password,user[5])
             if str(user[5]) == str(password) or str(user[4]) == str(password):
-                return {'user_id':user[0],'username':user[2],'mobile':user[3],'email':user[6],'message':'Login Successfull'}
+                return {'user_id':user[0],'username':user[2],'mobile':user[3],'email':user[7],'message':'Login Successfull'}
             else:
                 return {'user_id':None,'message':'Invalid Credentials passed'}
         else:
@@ -270,13 +274,34 @@ class User:
 class Company:
     @staticmethod
     async def find(id):
-        results = await DatabaseManager.query("SELECT * from business where id='%s' or company='%s'"%(id,id))
+        results = await DatabaseManager.query(f"SELECT * from business where id='%s' or company='%s'"%(id,id))
         if results == None or len(results) == 0:
             return None
         
         business = Business(*results[0])
         return business.to_dict()
         #return bs
+    @staticmethod
+    async def get_groups(cid):
+        resulsts = await DatabaseManager.query(f"select * from product_group where company='%s' and deleted_at is NULL"%(cid))
+        if resulsts == None:
+            return []
+        gs = []
+        for r in resulsts:
+            gs.append({'id':r[0],'name':r[1],'code':r[2],'enabled':bool(r[3])})
+        return gs
+
+    @staticmethod
+    async def get_products(cid):
+        resulsts = await DatabaseManager.query(f"select * from product_item where company='%s' and deleted_at is NULL"%(cid))
+        if resulsts == None:
+            return None
+        gs = []
+        for r in resulsts:
+            r = Product(*r)
+            gs.append(r.to_dict())
+        return gs
+
     @staticmethod
     async def get_companies():
         results = await DatabaseManager.query("SELECT * from business")
@@ -290,7 +315,7 @@ class Company:
 
     @staticmethod
     async def get_payments():
-        results = await DatabaseManager.query("SELECT * from payment_method")
+        results = await DatabaseManager.query("SELECT * from payment_method where deleted_at is NULL")
         if results == None or len(results) == 0:
             return []
         bs = []
@@ -364,6 +389,17 @@ class Cart:
         return rs
         pass
     @staticmethod
+    async def find_orders(oid):
+        images = await DatabaseManager.query(f"SELECT id,image_path,company from product_item where deleted_at is NULL")
+        query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE id=%d or order_id='%s'" % (oid,oid))
+        if query == None or len(query) == 0:
+            return []
+        os = []
+        for r in query:
+            r = Order_Item(*r,items=images)
+            os.append(r.to_dict())
+        return os
+    @staticmethod
     async def find_one(id):
         query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE id=%s" % id)
         if query == None or len(query) == 0:
@@ -400,7 +436,7 @@ class Cart:
 
 class Order:
     @staticmethod
-    async def add(user_id=None,cart=None,checkout=None,merchant=None,amount_paid=None):
+    async def add(user_id=None,cart=None,checkout=None,merchant=None,amount_paid=None,customer='Order'):
         if user_id and amount_paid:
             if cart == None:
                 cart = await Cart.find(user_id)
@@ -413,7 +449,7 @@ class Order:
                 taxes += i['unit_price']*i['tax_rate']
                 total += i['unit_price'] - i['discount_amount']
             order_id = await Order.get_next()
-            query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name) values ('%s','%s',%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s')"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,'Order'))
+            query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,amount_due,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name) values ('%s','%s',%s,%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s')"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,customer))
             print("qury",query)
             if query:
                 await Cart.update_all(user_id,order_id,cart=cart)
@@ -434,7 +470,7 @@ class Order:
         return await Order.get_wish(user_id)
     @staticmethod
     async def find(id):
-        query = await DatabaseManager.query(f"SELECT * FROM sales_order WHERE id=%s or order_num=%s" % (id,id))
+        query = await DatabaseManager.query(f"SELECT * FROM sales_order WHERE id=%d or order_num=%d" % (id,id))
         if query == None or len(query) == 0:
             return []
         r = Order_Invoice(*query[0])
@@ -469,5 +505,5 @@ class Order:
     async def get_next():
         query = await DatabaseManager.query(f"select order_num from sales_order ORDER BY order_num DESC LIMIT 1;")
         if query == None or len(query) == 0:
-            return 1001
-        return query[0][0]
+            return 10001
+        return query[0][0]+1
