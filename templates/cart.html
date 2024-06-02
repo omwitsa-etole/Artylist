@@ -358,6 +358,28 @@ z-index: 0
 </div>
 <script>
   const module = {}
+  $(document).ready(function() {
+	var currentPath = window.location.pathname;
+	let found = 0;
+	$('.nav-link').each(function() {
+		var href = $(this).attr('href');
+		
+		if (href === currentPath) {
+			$(this).addClass('active');
+			found += 1;
+		} else {
+			$(this).removeClass('active');
+		}
+	});
+	if(found == 0){
+		$('.nav-link').each(function() {
+			if($(this).attr('href').includes('home')){
+				$(this).addClass('active');
+			}
+		});
+	}
+});
+
 </script>
 <script type="module">
   import {fetchFunction} from "{{url_for('static',filename='js/modules/modules.js')}}"
