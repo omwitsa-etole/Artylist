@@ -66,7 +66,15 @@ export function otpHandler(number,type){
         action:"login-code",
         url:server_uri+"/api/login/get_code?user_id="+number,
     }
-    
+	setTimeout(function(){
+		for(let i=2;i<5;i++){
+		console.log(i)
+		$("#digit-"+i).on('keyup',function(){
+			$("#digit-"+(i+1)).select();
+		})
+	}
+	},2500)
+	
     Module.next = [null,number]
     Module.next[0] = (number)=>{
         const ecode = document.getElementById("getcode")
@@ -81,10 +89,10 @@ export function otpHandler(number,type){
             code =code+digit_3
             var digit_4 = $("#digit-5").val()
             code =code+digit_4
-            console.log(code)
+            $("#numLogin").text('Logging in ...')
             
             fetchFunction("/api/login",{username_email:number,password:code},"POST",function(data){
-                
+                $("#numLogin").text('Next')
                 if(data.status == 0){
                     location.href = "store";
                 }

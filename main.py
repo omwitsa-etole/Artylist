@@ -226,6 +226,8 @@ async def edit():
     user_id = 0
     if session.get("user"):
         user_id = session["user"]["user_id"]
+    else:
+        return redirect("login")
     payment_methods = await Company.get_payments()
     profile = await User.get_profile(user_id,payment_methods=payment_methods)
     product_groups = await Products.get_groups()
@@ -336,8 +338,11 @@ async def explore():
 @app.route("/setting")
 async def setting():
     user_id = 0
+    
     if session.get("user"):
         user_id = session["user"]["user_id"]
+    else:
+        return redirect("login")
     profile = await User.get_profile(user_id)
     return render_template("setting.html",**locals())
 

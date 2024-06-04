@@ -95,7 +95,7 @@ class Product:
         self.cost_price = price
         self.unit_price = price
         self.tax_rate = tax_rate
-        self.discount_rate = int(discount) / 100
+        self.discount_rate = (int(discount) * 100)/self.unit_price
         self.created_at = created
         if groups != None:
             for gr in groups:

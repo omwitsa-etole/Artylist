@@ -5,13 +5,13 @@ function allProducts(data){
         <swiper-slide>
         <div class="dzSwipe_card">
             <div class="dz-media" >
-                <img src="${data.image}" alt="" style="border-radius: 0;">
+                <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;">
             </div>
             <div class="dz-content">
                 <div class="left-content">
                     <span class="badge badge-primary d-inline-flex gap-1 mb-2">
                         <i class="fa fa-money-bill"></i><span>KES</span><b>${data.unit_price}</b></span>
-                    <h4 class="title">${data.name},<a href="/profile/${data.company_id}"> ${data.company}</a></h4>
+                    <h4 class="title"><a href="#" onclick="module.showSingle('${data.id}')">${data.name}</a>,<a style="text-decoration:underline;" href="/profile/${data.company_id}">@ ${data.company}</a></h4>
                     <ul class="intrest">
                         <li><span class="badge">${data.item_group}</span></li>
                         <li><span class="badge">${data.discount_rate} % OFF</span></li>
@@ -48,11 +48,18 @@ export function showProduct(data){
             var child = $(this).children().last();
             console.log($(this).children().last())
             if(child.hasClass("fa-cart-shopping")){
+				child.removeClass("fa-cart-shopping")
+                child.addClass("fa-spinner")
                 module.fetch("/api/store/addCart",{item_id:id,user_id:module.user_id},"POST",function(data){
                     console.log(data)
+					child.removeClass("fa-spinner")
+					if(data.length == 0){
+						child.addClass("fa-cart-shopping")
+					}else{
+						child.addClass("fa-check")
+					}
                 })
-                child.removeClass("fa-cart-shopping")
-                child.addClass("fa-check")
+                
 
             }else{
                 
@@ -127,12 +134,16 @@ export function showSingle(id){
     }
     document.getElementById("exploreProduct").classList.add('show');
     document.getElementById("exploreProduct").style.display = 'block'
+	document.getElementById("exploreProduct-content").innerHTML = `
+		<div class="spinner-border" role="status">
+		  <span class="sr-only">Loading...</span>
+		</div>`;
     module.fetch("/api/store/getProduct/"+id,null,"GET",function(data){
         console.log(data)
         data = data.data
         document.getElementById("exploreProduct-content").parentElement.style.height="599px"
         document.getElementById("exploreProduct-content").parentElement.style.overflowY = "scroll"
-        document.getElementById("exploreProduct-content").parentElement.style.minWidth = "75vh"
+        document.getElementById("exploreProduct-content").parentElement.style.minWidth = "85vh"
         document.getElementById("exploreProduct-content").style.height = "99%"
         document.getElementById("exploreProduct-content").style.overflowY = "scroll"
         document.getElementById("exploreProduct-content").innerHTML = `
@@ -142,10 +153,10 @@ export function showSingle(id){
                    
                     <div class="project-info-box">
                         <p class="mb-0">${data.description}.</p>
-                        <p><b>Creator:</b> ${data.company}</p>
+                        <p><b>Creator:</b>@ <a href='/profile/${data.company_id}'>${data.company}</a></p>
                         <p><b>Date:</b> ${data.created_at}</p>
                         <p><b>Name:</b> ${data.name}</p>
-                        <p><b>Tools:</b> ${data.item_group}</p>
+                        
                         <p class="mb-0"><b>Budget:</b> KES ${data.unit_price}</p>
                         <p>
                             <a href="javascript:void(0);"  onClick='module.addCart("${data.id}")' class="dz-icon"><i class="fa fa-shopping-cart shopping-icon"></i></a>
@@ -162,6 +173,9 @@ export function showSingle(id){
                     <div class="project-info-box">
                         <p><b>Categories:</b> ${data.item_group}</p>
                         <p><b>Discount:</b> ${data.discount_rate}</p>
+						<p>
+                            <a href="javascript:void(0);"  onClick='module.addCart("${data.id}")' class="dz-icon"><i class="fa fa-shopping-cart shopping-icon"></i></a>
+                        </p>
                         
                     </div><!-- / project-info-box -->
                 </div><!-- / column -->
