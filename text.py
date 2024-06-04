@@ -19,5 +19,12 @@ def send_text_message(to_number, message_body):
         print(f"Message sent successfully! SID: {message.sid}")
     except Exception as e:
         print(f"Failed to send message: {str(e)}")
+        
+
+from opentelemetry import trace
+from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.trace import Link
 
 

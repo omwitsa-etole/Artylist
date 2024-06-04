@@ -143,7 +143,7 @@ class Order_Item:
         return self.__dict__
 
 class Order_Invoice:
-    def __init__(self,id,user_id,company,amounts_tax,created,due,status,customer,amount_due,discount,tax_total,amount_paid,balance_due,advance_paid,paid,checkout_id,merchant_id,shipping,notes,user,created_at,updated_at,deleted,order_num,*n):
+    def __init__(self,id,user_id,company,amounts_tax,created,due,status,customer,amount_due,discount,tax_total,amount_paid,balance_due,advance_paid,paid,checkout_id,merchant_id,shipping,notes,user,created_at,updated_at,deleted,order_num,total,*n):
         self.id = id
         self.user_id = user_id
         self.company = company
@@ -162,6 +162,7 @@ class Order_Invoice:
         self.created_at = updated_at
         self.deleted = deleted
         self.order_number = order_num
+        self.total = total
         #self.user = user_id
         pass
     def to_dict(self):
@@ -378,7 +379,7 @@ class Cart:
     async def find(user_id):
         images = await DatabaseManager.query(f"SELECT id,image_path,company from product_item where deleted_at is NULL")
 
-        query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE user_id=%s and deleted_at is NULL" % user_id)
+        query = await DatabaseManager.query(f"SELECT * FROM sales_order_item WHERE user_id=%s and order_id is NULL and deleted_at is NULL " % user_id)
         if query == None or len(query) == 0:
             return []
         rs = []
@@ -408,7 +409,7 @@ class Cart:
         return r.to_dict()
     @staticmethod
     async def delete(uid,user_id):
-        update = DatabaseManager.update(f"update sales_order_item set deleted_at='%s' where id=%s and user_id=%s"%(date.today(),uid,user_id))
+        update = DatabaseManager.update(f"update sales_order_item set deleted_at='%s' where id=%s and user_id=%s "%(date.today(),uid,user_id))
         if not update:
             return False
         query = await DatabaseManager.query(f"DELETE FROM sales_order_item where id=%s and user_id=%s" % (uid,user_id))
@@ -449,7 +450,7 @@ class Order:
                 taxes += i['unit_price']*i['tax_rate']
                 total += i['unit_price'] - i['discount_amount']
             order_id = await Order.get_next()
-            query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,amount_due,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name) values ('%s','%s',%s,%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s')"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,customer))
+            query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,amount_due,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name,total) values ('%s','%s',%s,%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s',%d)"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,customer,total))
             print("qury",query)
             if query:
                 await Cart.update_all(user_id,order_id,cart=cart)
