@@ -478,12 +478,12 @@
             $('input[name="amount_paid"]').val(data.amount)
             $(".error").html(`Checkout Initiated validate on your phone...<br>Querying....`)
                 for(let i=0;i<5;i++){
-                setTimeout(function(){
+                setInterval(function(){
                     module.payQuery(data.checkout_id);
                     module.next = [function(){
                         $("#checkout-form").submit()
                     },null];
-                    $("#checkout-form").submit()
+                    //$("#checkout-form").submit()
                 },3500)
             }
             
