@@ -587,6 +587,7 @@
             data.status = data.ResponseCode
 
             if(data.ResultCode){
+				data.message = data.ResultDesc;
                 if(data.ResultCode != '0'){
                     
                     $('.error').append(`Payment incomplete with message : <br> ${data.ResultDesc}`);
