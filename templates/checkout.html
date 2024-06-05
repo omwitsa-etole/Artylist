@@ -585,7 +585,7 @@
                 $('.error').html(`<br><h4>${data.message}</h4>`)
             }
             data.status = data.ResponseCode
-
+			data.message = data.message ? data.message : 'Querying , code '+data.status
             if(data.ResultCode){
 				data.message = data.ResultDesc;
                 if(data.ResultCode != '0'){
