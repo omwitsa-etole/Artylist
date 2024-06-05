@@ -1,13 +1,24 @@
+function selectItem(id){
+	var currentDisplay = $(".content-"+id).css('display');
+	console.log(id);
+    if (currentDisplay === 'none') {
+      $(this).css('display', ''); // Set display to its default value
+    } else {
+      // Element is currently visible, so hide it
+      $(".content-"+id).css('display', 'none');
+    }
+}
+
 function allProducts(data){
     let el = ``
     for(var data of data.data){
         el += `
         <swiper-slide>
         <div class="dzSwipe_card">
-            <div class="dz-media" >
+            <div class="dz-media" onclick="module.selectItem(${data.id})">
                 <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;">
             </div>
-            <div class="dz-content">
+            <div class="dz-content content-${data.id}">
                 <div class="left-content">
                     <span class="badge badge-primary d-inline-flex gap-1 mb-2">
                         <i class="fa fa-money-bill"></i><span>KES</span><b>${data.unit_price}</b></span>
