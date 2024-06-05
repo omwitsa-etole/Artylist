@@ -297,7 +297,7 @@
 	display:flex;
 	text-align:center;
   }
-.loader {
+.loader-2 {
 	margin: 1.5% auto;
   width: 64.8px;
   height: 64.8px;
@@ -306,7 +306,7 @@
   background: radial-gradient(11.2px,currentColor 94%,#0000);
 }
 
-.loader:before {
+.loader-2:before {
   content: '';
   position: absolute;
   inset: 0;
@@ -555,7 +555,7 @@
             module.websocket.send(JSON.stringify(pay_data));
             document.getElementById("exploreProduct").classList.add('show');
             document.getElementById("exploreProduct").style.display = 'block'
-            $("#exploreProduct-content").html(`<div class="loader"></div><br><p class="error"></p>`)
+            $("#exploreProduct-content").html(`<div class="loader-2"></div><br><p class="error"></p>`)
             $('.error').html(`Initiating socket request... Sending Data .. `)
         }
         
