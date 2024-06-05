@@ -600,6 +600,8 @@
             }
 
             if(data.status && data.status != '01'){
+				data.message = data.CustomerMessage
+
                 if(module.next !== null){
                     let payload = module.next[1];
                     payload.checkout_id = data.CheckoutRequestID ? data.CheckoutRequestID : null;
