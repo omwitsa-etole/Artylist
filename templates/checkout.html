@@ -449,11 +449,9 @@
                 <div class="d-flex flex-column px-md-5 px-4 mb-4"> <span>Mobile Number</span> 
                     <div class="inputWithIcon"> 
                         <input class="form-control" id="phone" type="text" placeholder="254 71234 5678"> 
-                        <span class=""> 
-                            <img src="https://www.freepnglogos.com/uploads/mastercard-png/mastercard-logo-logok-15.png" alt="">
-                        </span> 
+                        
                     </div> 
-                </div> 
+                </div>
             </div> 
             
            
@@ -542,7 +540,7 @@
             console.log("socket message=>",data);
             
             if(data.message){
-                $('.error').append(`<br><h4>${data.message}</h4>`)
+                $('.error').html(`<br><h4>${data.message}</h4>`)
             }
             data.status = data.ResponseCode
 
