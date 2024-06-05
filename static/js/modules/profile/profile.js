@@ -62,13 +62,15 @@ export function setPickup (id){
     document.getElementById("exploreProduct-content").style.overflowY = "scroll"
     $(`#${id}`).html(`
         <h4>Pickup</h4>
-        <dic id="companies"></div>
+		
+        <div id="companies"><div class="loader"></div></div>
     `)
     module.fetch("/api/get_companies",{},"POST",function(data){
         console.log(data)
         if(data.message){
             alert(data.message)
         }
+		$("#companies").empty();
         if(data.data){
             for(const comp of data.data){
                 if(comp.is_pickup){
@@ -83,7 +85,8 @@ export function setPickup (id){
 
                             <h1>${comp.name}</h1>
                             <p>
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Unde explicabo enim rem odio assumenda?
+                                <i class fa fa-map-pin></i> <b>Address</b> : ${comp.address}<br>
+								${comp.coordinates}
                             </p>
                             <div class="card-buttons">
                                 <button class="btn btn-default button" onclick="module.userSetPickup('${comp.id}')">Select</button>
