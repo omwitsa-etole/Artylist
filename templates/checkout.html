@@ -449,6 +449,7 @@
     </form>
     <script src="{{url_for('static',filename='assets/js/jquery.js')}}"></script>
     <script>
+		var intid = null;
         const urli = 'https://posdesk-8a71a5fe3d60.herokuapp.com';
         var main = null;
         function mobilePayment(){
@@ -518,7 +519,7 @@
             $('input[name="amount_paid"]').val(data.amount)
             $(".error").html(`Checkout Initiated validate on your phone...<br>Querying....`)
                 
-                setInterval(function(){
+                intid = setInterval(function(){
                     module.payQuery(data.checkout_id);
                     module.next = [function(){
                         $("#checkout-form").submit()
@@ -580,7 +581,9 @@
             const event = JSON.parse(data);
             data = event;
             console.log("socket message=>",data);
-            
+            if(data.status == undefined){
+				return;
+			}
             if(data.message && data.status != undefined){
                 $('.error').html(`<br><h4>${data.message}</h4>`)
             }
@@ -591,7 +594,7 @@
                 if(data.ResultCode != '0'){
                     
                     $('.error').append(`Payment incomplete with message : <br> ${data.ResultDesc}`);
-                    module.next = null;
+                    //module.next = null;
                 }else{
                     $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
                     await module.next[0](module.next[1]);
@@ -612,6 +615,12 @@
                     module.next = null;
                 }
             }
+			if(data.message == undefined){
+				if(intid){
+					clearInterval(intid);
+					module.next = null;
+				}
+			}
 			if(data.status !== undefined){
 				$('.error').html(`<br>Payment initiiation status : <br>${data.message }`)
             }else{
