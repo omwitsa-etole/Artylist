@@ -448,7 +448,7 @@ class Order:
             for i in cart:
                 discounts += i['discount_amount']
                 taxes += i['unit_price']*i['tax_rate']
-                total += i['unit_price'] - i['discount_amount']
+                total += i['unit_price'] 
             order_id = await Order.get_next()
             query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,amount_due,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name,total) values ('%s','%s',%s,%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s',%d)"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,customer,total))
             print("qury",query)

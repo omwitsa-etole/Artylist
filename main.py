@@ -248,7 +248,7 @@ async def cart():
     total = 0
     shipping = 0
     for i in items:
-        total += i['unit_price'] - i['discount_amount']
+        total += i['unit_price'] 
     print(items,orders)
     return render_template("cart.html",**locals())
 
@@ -313,7 +313,7 @@ async def checkout():
     for i in items:
         discounts += i['discount_amount']
         taxes += i['unit_price']*i['tax_rate']
-        total += i['unit_price'] - i['discount_amount']
+        total += i['unit_price']
     order_id = await Order.get_next()
     if request.method == "POST" and 'checkout_id' in request.form:
         checkout_id = request.form['checkout_id']
