@@ -1,4 +1,4 @@
-function selectItem(id){
+export function selectItem(id){
 	var currentDisplay = $(".content-"+id).css('display');
 	console.log(id);
     if (currentDisplay === 'none') {
