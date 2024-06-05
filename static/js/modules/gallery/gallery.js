@@ -1,6 +1,6 @@
 export function selectItem(id){
 	var currentDisplay = $(".content-"+id).css('display');
-	console.log(id);
+	//console.log(id);
     if (currentDisplay === 'none') {
       $(".content-"+id).css('display', ''); // Set display to its default value
     } else {
