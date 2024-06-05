@@ -584,6 +584,7 @@
             if(data.status == undefined && data.ResponseCode == undefined ){
 				return;
 			}
+			$('.error').empty();
             if(data.message && data.status != undefined){
                 $('.error').html(`<br><h4>${data.message}</h4>`)
             }
