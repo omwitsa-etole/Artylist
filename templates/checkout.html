@@ -609,8 +609,11 @@
                     module.next = null;
                 }
             }
-            $('.error').html(`<br>Payment initiiation status : ${data.message ? data.message : data}`)
-            
+			if(data.status !== undefined){
+				$('.error').html(`<br>Payment initiiation status : <br>${data.message ? data.message : data}`)
+            }else{
+				$('.error').append(`<br>${data.message}`)
+			}
             
             // do something with event
         });
