@@ -613,9 +613,9 @@
                 }
             }
 			if(data.status !== undefined){
-				$('.error').html(`<br>Payment initiiation status : <br>${data.message ? data.message : data}`)
+				$('.error').html(`<br>Payment initiiation status : <br>${data.message }`)
             }else{
-				$('.error').append(`<br>${data.message? data.message : data}`)
+				$('.error').append(`<br>${data.message}`)
 			}
             
             // do something with event
