@@ -29,7 +29,7 @@ export async function fetchFunction(apiUrl, payload, method,nextFunction) {
   
 const module = {}
 const ws_url = "wss://wsmain-f4c459715e93.herokuapp.com/"
-
+//const ws_url = 'ws://localhost:5001/'
 module.websocket = new WebSocket(ws_url);
 
 module.next = null

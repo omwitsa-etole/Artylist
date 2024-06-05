@@ -284,7 +284,7 @@ class Company:
         #return bs
     @staticmethod
     async def get_groups(cid):
-        resulsts = await DatabaseManager.query(f"select * from product_group where company='%s' and deleted_at is NULL"%(cid))
+        resulsts = await DatabaseManager.query("select * from product_group where deleted_at is NULL")
         if resulsts == None:
             return []
         gs = []
@@ -377,7 +377,7 @@ class Cart:
     @staticmethod
     async def add(item,user_id,qty=1):
         #print("query",(f"INSERT INTO sales_order_item (user_id,item_id, order_id,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount) VALUES (%s,%d, %s,'%s','%s','%s','%s','%s','%s','%s')"%(user_id,item['id'],None,item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty)))
-        query = DatabaseManager.insert(f"INSERT INTO sales_order_item (user_id,item_id,item_name, description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,company) VALUES (%s,%d,'%s','%s','%s','%s','%s','%s','%s','%s',%d)"%(user_id,item['id'],item['name'],item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty,int(item['company'])))
+        query = DatabaseManager.insert(f"INSERT INTO sales_order_item (user_id,item_id,item_name, description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,company) VALUES (%s,%d,'%s','%s','%s','%s','%s','%s','%s','%s',%d)"%(user_id,item['id'],item['name'],item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate']/item['unit_price'],item['discount_rate'],item['unit_price']*qty,int(item['company'])))
         if query == None:
             return None
         return await Cart.find(user_id)
