@@ -1,25 +1,31 @@
 {%extends 'main.html'%}
 
 {%block content%}
-<div class="page-content space-top p-b60">
+<div class="page-content space-top p-b60" style="overflow-y: scroll;height: 100vh;">
 		<div class="container">
-            <div class="row">
+            <div class="row" style="margin:top: 9px;">
+				<form>
                 <div class="form-outline" data-mdb-input-init>
-                    <input type="search" id="form1" class="form-control product-query" onkeyup="filterFn(this.value)" placeholder="Type query" aria-label="Search" />
+                    <input type="search" name="query" id="form1" class="form-control product-query" onkeyup="filterFn(this.value)" placeholder="Type query" aria-label="Search" />
                 </div><br>
+				{%if search_query or company_query or category_query%}
+					<p class="mb-0" style="color:pink;float:right;"><a href="explore">clear search</a></p>
+				{%endif%}
+				</form>
             </div>
-			<div class="row g-3 item-list" id="item-list" style="margin-top: 14px;overflow-y: scroll;height: 400px;">
+			<div class="row g-3 item-list" id="item-list" style="margin-top: 14px;height:95%;">
 				
 				
 				{%for product in products%}
 				<div class="col-md-6 col-12 item-item"  style="margin-bottom: 31px;">
 					<div class="dz-media-card style-3">
-						<div class="dz-media">
-							<img src={{product['image']}}>
+						<div class="dz-media" style="min-height: 288px;">
+							<img style="object-fit:contain;" src={{product['image']}}>
 						</div>
 						<div class="dz-content">
 							<h3 class="title">{{product['name']}}</h3>
-							<p>{{product['description']}}</p><p>{{product['item_group']}}</p>
+							<p style="visibility:hidden;">{{product['description']}}</p><p><a style="text-decoration:underline;color:pink;" href="?category={{product['item_group']}}">{{product['item_group']}}</a> 
+							/ @<a href="?company={{product['company']}}" class="btn-light">{{product['company']}}</a></p>
 							{%set prod_id = product['id']%}
 							<a href="javascript:void(0);" class="btn btn-light rounded-xl explore-now" onclick='module.showSingle("{{prod_id}}")'>EXPLORE NOW</a>
 						</div>

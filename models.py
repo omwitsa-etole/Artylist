@@ -333,8 +333,15 @@ class Company:
         return bs
 class Products:
     @staticmethod
-    async def get_products(groups=None,companies=None):
-        results = await DatabaseManager.query('SELECT * from product_item where deleted_at is null order by id desc')
+    async def get_products(groups=None,companies=None,query=None,company=None,group=None):
+        if query:
+            results = await DatabaseManager.query(f"SELECT * from product_item where name like '%s' or description like '%s' and deleted_at is null order by id desc"%('%'+str(query)+'%','%'+str(query)+'%'))
+        elif company:
+            results = await DatabaseManager.query(f"SELECT * from product_item where deleted_at is null and company='%s' order by id desc"%(company))
+        elif group:
+            results = await DatabaseManager.query(f"SELECT * from product_item where deleted_at is null and item_group=%d or group_id=%d order by id desc"%(group,group))
+        else:
+            results = await DatabaseManager.query(f"SELECT * from product_item where deleted_at is null order by id desc")
         #print(results)
         if results == None:
             return []

@@ -326,9 +326,26 @@ async def checkout():
 
 @app.route("/explore")
 async def explore():
+    search_query = request.args.get("query")
+    company_query = request.args.get("company")
+    category_query = request.args.get("category")
     company = await Company.get_companies()
     groups = await Products.get_groups()
-    products = await Products.get_products(groups=groups,companies=company)
+    if search_query and len(search_query) > 1:
+        products = await Products.get_products(groups=groups,companies=company,query=query)
+    elif company_query and len(company_query) > 1:
+        for c in company:
+            if str(company_query) in str(c['name']) or c['trade_name'] == company_query:
+                company_query = c['company']
+        products = await Products.get_products(groups=groups,companies=company,company=company_query)
+    elif category_query and len(category_query) > 1:
+        for c in groups:
+            if category_query in str(c['name']) or c['name'] == category_query:
+                category_query = c['id']
+        print("categroy",category_query)
+        products = await Products.get_products(groups=groups,companies=company,group=category_query)
+    else:
+        products = await Products.get_products(groups=groups,companies=company)
     user_id = 0
     if session.get("user"):
         user_id = session["user"]["user_id"]

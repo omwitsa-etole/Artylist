@@ -346,8 +346,8 @@
                     </div> 
                 </div> 
                 <ul class="nav nav-tabs mb-3 px-md-4 px-2"> 
-                    <li class="nav-item"> <a class="nav-link px-2 active" aria-current="page" href="#credit"  onclick="cardPayment()">Credit Card</a> </li> 
-                    <li class="nav-item"> <a class="nav-link px-2" href="#mobile" onclick="mobilePayment();this.classList.add('active') ? !this.classList.contains('active') : this.classList.remove('active')">Mobile Payment</a> </li> 
+                    <li class="nav-item"> <a class="nav-link px-2 " aria-current="page" href="#credit"  onclick="cardPayment()">Credit Card</a> </li> 
+                    <li class="nav-item"> <a class="nav-link px-2 active" href="#mobile" onclick="mobilePayment();this.classList.add('active') ? !this.classList.contains('active') : this.classList.remove('active')">Mobile Payment</a> </li> 
                     <li class="nav-item ms-auto"> <a class="nav-link px-2" href="#">+ More</a> </li> 
                 </ul> 
                     <div class="px-md-5 px-4 mb-4 d-flex align-items-center"> 
@@ -578,6 +578,7 @@
             // Send the ID to the WebSocket server after the connection is established
             module.websocket.send(JSON.stringify({ type: 'id', id: "<?= Session::get('username')?>" }));
         });
+		mobilePayment();
         </script>
 
 {%endblock%}
