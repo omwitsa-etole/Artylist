@@ -11,10 +11,11 @@ export function selectItem(id){
 
 function allProducts(data){
     let el = ``
+	$(".dz-content").on('click',function(){e.preventDefault();return;})
     for(var data of data.data){
         el += `
         <swiper-slide>
-        <div class="dzSwipe_card" oncontextmenu="module.selectItem(${data.id})" onclick="module.selectItem(${data.id})" onkeydown="module.selectItem(${data.id})">
+        <div class="dzSwipe_card"  onclick="module.selectItem(${data.id})" onkeydown="module.selectItem(${data.id})">
             <div class="dz-media" >
                 <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;">
             </div>
