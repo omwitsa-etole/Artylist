@@ -312,7 +312,7 @@
                 <div class="d-flex align-items-center justify-content-between text mb-4"> 
                     <span>Total</span> 
                     <span class="fas fa-dollar-sign">
-                        <span class="ps-1">{{total - discounts}}</span>
+                        <span class="ps-1">{{total }}</span>
                     </span> 
                 </div> 
                 <div class="border-bottom mb-4"></div> 
@@ -503,7 +503,7 @@
             let pay_data = {
                 'action':'stk-pay',
                 'phone':phone,
-                'amount':parseInt('{{total - discounts}}'),
+                'amount':parseInt('{{total}}'),
                 'description':"paybill online",
                 'reference':'PAYBILL',
                 'callback':urli+'/customer/pay'
