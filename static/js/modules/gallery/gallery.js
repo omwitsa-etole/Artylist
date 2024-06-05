@@ -14,8 +14,8 @@ function allProducts(data){
     for(var data of data.data){
         el += `
         <swiper-slide>
-        <div class="dzSwipe_card">
-            <div class="dz-media" onclick="module.selectItem(${data.id})">
+        <div class="dzSwipe_card" oncontextmenu="module.selectItem(${data.id})" onclick="module.selectItem(${data.id})" onkeydown="module.selectItem(${data.id})">
+            <div class="dz-media" >
                 <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;">
             </div>
             <div class="dz-content content-${data.id}">
