@@ -475,7 +475,7 @@
             $('input[name="merchant_id"]').val(data.merchant_id)
             $('input[name="amount_paid"]').val(data.amount)
             $(".error").html(`Checkout Initiated validate on your phone...<br>Querying....`)
-                for(let i=0;i<5;i++){
+                
                 setInterval(function(){
                     module.payQuery(data.checkout_id);
                     module.next = [function(){
@@ -483,7 +483,7 @@
                     },null];
                     //$("#checkout-form").submit()
                 },3500)
-            }
+            
             
         }
 
