@@ -17,9 +17,9 @@ function allProducts(data){
         <swiper-slide>
         <div class="dzSwipe_card"  onclick="module.selectItem(${data.id})" onkeydown="module.selectItem(${data.id})">
             <div class="dz-media" >
-                <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;">
+                <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;width: 100%;height: 100%;">
             </div>
-            <div class="dz-content content-${data.id}">
+            <div class="dz-content content-${data.id}" onclick="module.selectItem(${data.id})">
                 <div class="left-content">
                     <span class="badge badge-primary d-inline-flex gap-1 mb-2">
                         <i class="fa fa-money-bill"></i><span>KES</span><b>${data.unit_price}</b></span>
