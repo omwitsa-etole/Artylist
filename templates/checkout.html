@@ -607,9 +607,9 @@
 
                     module.next = null;
                 }
-            }else{
-                $('.error').append(`<br>Payment initiiation failed with status : ${data.message ? data.message : data}`)
             }
+            $('.error').html(`<br>Payment initiiation status : ${data.message ? data.message : data}`)
+            
             
             // do something with event
         });
