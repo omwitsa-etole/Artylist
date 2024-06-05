@@ -43,7 +43,7 @@ class Profile:
         return self.__dict__
 
 class Business:
-    def __init__(self,id,company,name,trade_name,address,is_default,inactive,tax_id,type,currency,email,phone,logo,is_pickup,coordinates):
+    def __init__(self,id,company,name,trade_name,address,is_default,inactive,tax_id,type,currency,email,phone,logo,is_pickup,coordinates,*n):
         self.id = id
         self.company = company
         self.name = name
