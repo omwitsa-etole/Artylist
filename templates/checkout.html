@@ -581,7 +581,7 @@
             const event = JSON.parse(data);
             data = event;
             console.log("socket message=>",data);
-            if(data.status == undefined){
+            if(data.status == undefined && data.ResponseCode == undefined ){
 				return;
 			}
             if(data.message && data.status != undefined){
