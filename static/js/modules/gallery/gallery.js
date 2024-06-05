@@ -2,7 +2,7 @@ function selectItem(id){
 	var currentDisplay = $(".content-"+id).css('display');
 	console.log(id);
     if (currentDisplay === 'none') {
-      $(this).css('display', ''); // Set display to its default value
+      $(".content-"+id).css('display', ''); // Set display to its default value
     } else {
       // Element is currently visible, so hide it
       $(".content-"+id).css('display', 'none');
