@@ -539,7 +539,7 @@
             data = event;
             console.log("socket message=>",data);
             
-            if(data.message){
+            if(data.message && data.status != undefined){
                 $('.error').html(`<br><h4>${data.message}</h4>`)
             }
             data.status = data.ResponseCode
@@ -550,7 +550,7 @@
                     $('.error').append(`Payment incomplete with message : <br> ${data.ResultDesc}`);
                     module.next = null;
                 }else{
-                    $('.error').html(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
+                    $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
                     await module.next[0](module.next[1]);
                     module.next = null;
                 }
