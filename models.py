@@ -334,7 +334,7 @@ class Company:
 class Products:
     @staticmethod
     async def get_products(groups=None,companies=None):
-        results = await DatabaseManager.query('SELECT * from product_item where deleted_at is null')
+        results = await DatabaseManager.query('SELECT * from product_item where deleted_at is null order by id desc')
         #print(results)
         if results == None:
             return []

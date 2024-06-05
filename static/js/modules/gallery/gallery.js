@@ -5,7 +5,7 @@ function allProducts(data){
         <swiper-slide>
         <div class="dzSwipe_card">
             <div class="dz-media" >
-                <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;">
+                <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;">
             </div>
             <div class="dz-content">
                 <div class="left-content">
@@ -169,7 +169,7 @@ export function showSingle(id){
                 </div><!-- / column -->
         
                 <div class="col-md-7">
-                    <img src="${data.image}" alt="project-image" class="rounded"/>
+                    <img src="${data.image}" alt="project-image" class="rounded" style="object-fit: contain;max-width: 45vh;"/>
                     <div class="project-info-box">
                         <p><b>Categories:</b> ${data.item_group}</p>
                         <p><b>Discount:</b> ${data.discount_rate}</p>
