@@ -58,7 +58,7 @@ class Business:
         self.phone = phone
         self.logo = logo if logo != None else "https://th.bing.com/th/id/OIP.2AmwrTnE_ys6QNCFe6iKRwHaHa?rs=1&pid=ImgDetMain"
         self.is_pickup = bool(is_pickup)
-        self.coordinates = coordinates.split(":")
+        self.coordinates = coordinates.split(":") if coordinates else ['0','0']
     def to_dict(self):
         return self.__dict__
 
