@@ -105,6 +105,7 @@ img {
         }
 </style>
 </head>   
+<script>const main = {};</script>
 <body class="overflow-hidden header-large">
 <div class="page-wrapper">
     
@@ -131,7 +132,7 @@ img {
 						</a>
 					</div>
 					<div class="right-content dz-meta">
-						<a href="#create-order" class="filter-icon">
+						<a href="#create-order" class="filter-icon" onclick="main.createOrder()">
 							<i class="fa-solid fa-folder-plus"></i>
 						</a>
 					</div>
@@ -249,7 +250,7 @@ img {
     <!-- Sidebar End -->
 	
 	<!-- Page Content Start -->
-	<div style="height: 95%;overflow-y: auto;">
+	<div style="height: 95%;overflow-y: auto;" id="block-content">
     {%block content%}
 	
     {%endblock%}
@@ -314,6 +315,10 @@ img {
 <script src="{{url_for('static',filename='assets/js/settings.js')}}"></script>
 <script src="{{url_for('static',filename='assets/js/custom.js')}}"></script>
 <script src="{{url_for('static',filename='assets/js/modal.js')}}"></script>
+<script type="module">
+import {createOrder} from "{{url_for('static',filename='js/modules/gallery/gallery.js')}}"
+main.createOrder = createOrder;
+</script>
 <script>
 	//document.querySelector('.page-wrapper').innerHTML += addModal("exploreProduct");
 	function showHideNav(){

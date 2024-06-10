@@ -197,3 +197,118 @@ export function showSingle(id){
         `
     })
 }
+
+export function createOrder(){
+	return document.getElementById('block-content').innerHTML = `
+		<div class="page-content" style="overflow-y: scroll;height: 100vh;">
+		<section class="order-form m-4" style="margin-bottom: 26px;">
+		  <div class="container pt-4">
+			  <div class="row">
+				  <div class="col-12 px-4">
+					  <h1>Create Order</h1>
+					  <span>Create a purchase order</span>
+					  <hr class="mt-1" />
+				  </div>
+				  <form onsubmit="return false">
+				  <div class="col-12">
+					  <div class="row mx-4">
+						  <div class="col-12">
+							  <label class="order-form-label">Company</label>
+						  </div>
+						  <div class="col-sm-6">
+							  <div data-mdb-input-init class="form-outline">
+								  <select id="form1" class="form-control order-form-input" /></select>
+								  <label class="form-label" for="form1">First</label>
+							  </div>
+						  </div>
+						  <div class="col-sm-6 mt-2 mt-sm-0">
+							  <div data-mdb-input-init class="form-outline">
+								  <select id="form2" class="form-control order-form-input" /></select>
+								  <label class="form-label" for="form2">Catgory</label>
+							  </div>
+						  </div>
+					  </div>
+
+					  <div class="row mt-3 mx-4">
+						  <div class="col-12">
+							  <label class="order-form-label">Description of what you want to order</label>
+						  </div>
+						  <div class="col-12">
+							  <div data-mdb-input-init class="form-outline">
+								  <input type="text" id="order" name="order" class="form-control order-form-input" />
+							  </div>
+						  </div>
+					  </div>
+
+					  <div class="row mt-3 mx-4">
+						  <div class="col-12">
+							  <label class="order-form-label">Another thing you want to order</label>
+						  </div>
+						  <div class="col-12">
+							  <div data-mdb-input-init class="form-outline">
+								  <input type="text" id="another" name="another" class="form-control order-form-input" />
+							  </div>
+						  </div>
+					  </div>
+
+					  <div class="row mt-3 mx-4">
+						  <div class="col-12">
+							  <label class="order-form-label" for="date-picker-example">Date</label>
+						  </div>
+						  <div class="col-12">
+							  <div data-mdb-input-init class="form-outline datepicker" data-mdb-toggle-button="false">
+								  <input
+								  type="text" class="form-control order-form-input" id="datepicker" name="date" data-mdb-toggle="datepicker" />
+								  <label for="datepicker1" class="form-label">Select a date</label>
+							  </div>
+						  </div>
+					  </div>
+
+					  <div class="row mt-3 mx-4">
+						  <div class="col-12">
+							  <label class="order-form-label">Contact</label>
+						  </div>
+						  <div class="col-12">
+							  <div data-mdb-input-init class="form-outline">
+								  <input type="text" id="address" name="address" class="form-control order-form-input" />
+								  <label class="form-label" for="address">Street Address</label>
+							  </div>
+						  </div>
+						  
+						  <div class="col-sm-6 mt-2 pe-sm-2">
+							  <div data-mdb-input-init class="form-outline">
+								  <input type="text" id="email" name="email" class="form-control order-form-input" />
+								  <label class="form-label" for="email">Email</label>
+							  </div>
+						  </div>
+						  <div class="col-sm-6 mt-2 ps-sm-0">
+							  <div data-mdb-input-init class="form-outline">
+								  <input type="text" name="phone" id="phone" class="form-control order-form-input" />
+								  <label class="form-label" for="phone">Phone</label>
+							  </div>
+						  </div>
+						  
+					  </div>
+
+					  <div class="row mt-3 mx-4">
+						  <div class="col-12">
+							  <div class="form-check">
+								  <input checked class="form-check-input" type="checkbox" value="" id="flexCheckDefault" />
+								  <label class="form-check-label" for="flexCheckDefault">I agree to be contacted via the information provided</label>
+							  </div>
+						  </div>
+					  </div>
+
+					  <div class="row mt-3">
+						  <div class="col-12">
+							  <button  type="button" data-mdb-button-init id="btnSubmit" data-mdb-ripple-init class="btn btn-primary d-block mx-auto btn-submit">Submit</button>
+						  </div>
+					  </div>
+				  </div>
+				  </form>
+			  </div>
+		  </div>
+		</section>
+		</div>
+	`
+}

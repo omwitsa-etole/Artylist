@@ -205,7 +205,7 @@ def login():
 def gallery():
     return render_template("js/gallery.js")
 
-@app.route("/store")
+@app.route("/store",methods=['GET','POST'])
 @app.route("/shop")
 @app.route("/home")
 def landing():
