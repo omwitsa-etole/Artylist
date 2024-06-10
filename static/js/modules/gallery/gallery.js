@@ -23,7 +23,7 @@ function allProducts(data){
                 <div class="left-content">
                     <span class="badge badge-primary d-inline-flex gap-1 mb-2">
                         <i class="fa fa-money-bill"></i><span>KES</span><b>${data.unit_price}</b></span>
-                    <h4 class="title"><a href="#" onclick="module.showSingle('${data.id}')">${data.name}</a>,<a style="text-decoration:underline;" href="/profile/${data.company_id}">@ ${data.company}</a></h4>
+                    <h4 class="title"><a href="#" onclick="module.showSingle('${data.id}')">${data.trade_name}</a>,<a style="text-decoration:underline;" href="/profile/${data.company_id}">@ ${data.company}</a></h4>
                     <ul class="intrest">
                         <li><span class="badge">${data.item_group}</span></li>
                         <li><span class="badge">${data.discount_rate} % OFF</span></li>
