@@ -104,7 +104,7 @@ class Product:
         if companies != None:
             for c in companies:
                 if c['company'] == self.company:
-                    self.company = c['name']
+                    self.company = c['trade_name']
     def to_dict(self):
         
         return self.__dict__
