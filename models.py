@@ -57,6 +57,7 @@ class Business:
         self.email = email
         self.phone = phone
         self.logo = logo if logo != None else "https://th.bing.com/th/id/OIP.2AmwrTnE_ys6QNCFe6iKRwHaHa?rs=1&pid=ImgDetMain"
+        self.logo = image if 'http' in self.logo else api_url+self.logo
         self.is_pickup = bool(is_pickup)
         self.coordinates = coordinates.split(":") if coordinates else ['0','0']
     def to_dict(self):
