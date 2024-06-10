@@ -21,7 +21,7 @@ function allProducts(data){
             </div>
             <div class="dz-content content-${data.id}" onclick="module.selectItem(${data.id})">
                 <div class="left-content">
-                    <span class="badge badge-primary d-inline-flex gap-1 mb-2">
+                    <span class="badge badge-primary d-inline-flex gap-1 mb-2" style="position:absolute;left:2px;margin-top: -26px;">
                         <i class="fa fa-money-bill"></i><span>KES</span><b>${data.unit_price}</b></span>
                     <h4 class="title"><a href="#" onclick="module.showSingle('${data.id}')">${data.name}</a>,<a style="text-decoration:underline;" href="/profile/${data.company_id}">@ ${data.company}</a></h4>
                     <ul class="intrest">
