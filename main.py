@@ -318,9 +318,10 @@ async def checkout():
     if request.method == "POST" and 'checkout_id' in request.form:
         checkout_id = request.form['checkout_id']
         merchant_id = request.form['merchant_id']
-        amount = request.form['amount_paid']
+        phone = request.form['phone_no']
+        amount = request.form['amount_paid'];transaction_code = request.form['transaction_code']
         
-        new_order = await Order.add(user_id=user_id,cart=items,checkout=checkout_id,merchant=merchant_id,amount_paid=amount,customer=session['user']['username'])
+        new_order = await Order.add(phone,user_id=user_id,cart=items,checkout=checkout_id,merchant=merchant_id,transaction_code=transaction_code,amount_paid=amount,customer=session['user']['username'])
     #order_id = "SN8478042099"
     return render_template("checkout.html",**locals())
 

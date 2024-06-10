@@ -3,7 +3,7 @@ import random
 from datetime import date, timedelta
 
 #api_url = 'http://localhost:8080/'
-api_url = 'https://posdesk-8a71a5fe3d60.herokuapp.com/'
+api_url = 'https://officedesk-d876d88e196a.herokuapp.com/'
 class Payments:
     def __init__(self,id,code,name,enabled,company,default,created_at,updated,deleted,user):
         self.id = id
@@ -444,7 +444,7 @@ class Cart:
 
 class Order:
     @staticmethod
-    async def add(user_id=None,cart=None,checkout=None,merchant=None,amount_paid=None,customer='Order'):
+    async def add(phone,user_id=None,cart=None,checkout=None,transaction_code=None,merchant=None,amount_paid=None,customer='Order'):
         if user_id and amount_paid:
             if cart == None:
                 cart = await Cart.find(user_id)
@@ -457,6 +457,7 @@ class Order:
                 taxes += i['unit_price']*i['tax_rate']
                 total += i['unit_price'] 
             order_id = await Order.get_next()
+            transaction = DatabaseManager.insert(f"insert into transactions (transaction_code,checkout_id,amount,order_num,phone,message) values('%s','%s','%s','%s','%s','%s') "%(transaction_code,checkout_id,amount_paid,order_id,phone,'Online Order Purchase- Order Id'+str(order_id)))
             query = DatabaseManager.insert(f"insert into sales_order (order_num,user_id,amount_paid,amounts_tax_inc,disc_total,tax_total,amount_due,balance_due,advance_paid,checkout_id,merchant_id,shipping_address,notes,fdesk_user,customer_name,total) values ('%s','%s',%s,%s,%s,%s,%s,%s,%s,'%s','%s','%s','%s','%s','%s',%d)"%(order_id,user_id,amount_paid,taxes,discounts,taxes,float(total)-float(amount_paid),float(total)-float(amount_paid),amount_paid,checkout,merchant,None,None,user_id,customer,total))
             print("qury",query)
             if query:

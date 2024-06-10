@@ -448,12 +448,14 @@
     <form style="display: none;" id="checkout-form" method="post">
         <input name="checkout_id"/>
         <input type="hidden" name="merchant_id">
-        <input type="hidden" name="amount_paid">    
+		<input type="hidden" name="transaction_code">
+        <input type="hidden" name="amount_paid"> 
+		<input type="hidden" name="phone_no">    
     </form>
     <script src="{{url_for('static',filename='assets/js/jquery.js')}}"></script>
     <script>
 		var intid = null;
-        const urli = 'https://posdesk-8a71a5fe3d60.herokuapp.com';
+        const urli = 'https://officedesk-d876d88e196a.herokuapp.com';
         var main = null;
         function mobilePayment(){
             const body = document.getElementById("paymentForm")
@@ -520,13 +522,17 @@
             $('input[name="checkout_id"]').val(data.checkout_id)
             $('input[name="merchant_id"]').val(data.merchant_id)
             $('input[name="amount_paid"]').val(data.amount)
+            $('input[name="phone_no"]').val(data.phone)
+			$('input[name="transaction_code"]').val(null)
             $(".error").html(`Checkout Initiated validate on your phone...<br>Querying....`)
                 
                 intid = setInterval(function(){
                     module.payQuery(data.checkout_id);
-                    module.next = [function(){
+                    module.next = [function(dt){
+						$('.error').html(`Payment Successfull.. Redirecting`);
+						$('input[name="transaction_code"]').val(dt.TransactionID ? dt.TransactionID : dt.TransID)
                         $("#checkout-form").submit()
-                    },null];
+                    },data];
                     //$("#checkout-form").submit()
                 },5000)
             
@@ -557,13 +563,14 @@
             module.next = [module.payNow,pay_data];
             $('.error').html(`Initiating socket request... Sending Data .. `)
             module.websocket.send(JSON.stringify(pay_data));
+			$('input[name="phone_no"]').val(pay_data.phone)
             document.getElementById("exploreProduct").classList.add('show');
             document.getElementById("exploreProduct").style.display = 'block'
             $("#exploreProduct-content").html(`<div class="loader-2"></div><br><p class="error"></p>`)
             $('.error').html(`Initiating socket request... Sending Data .. `)
         }
         
-        const wsurl = "wss://wsmain-f4c459715e93.herokuapp.com/"
+        const wsurl = "wss://wsdesk-8dac13c80786.herokuapp.com/"
         //const wsurl = 'ws://localhost:5001/'
         module.websocket = new WebSocket(wsurl);
         module.next = null
@@ -601,7 +608,7 @@
                     //module.next = null;
                 }else{
                     $('.error').append(`<br><h5>Successfully initiated payment, waiting for response</h5>`);
-                    await module.next[0](module.next[1]);
+                    await module.next[0]({...module.next[1],...data});
                     module.next = null;
                 }
             }

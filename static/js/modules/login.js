@@ -56,7 +56,7 @@ export function getVerification(number,code){
     return false
 }
 
-const server_uri = window.location.protocol.includes('https') ? 'https://'+window.location.host : "https://artylist-b565dccf3eda.herokuapp.com"
+const server_uri = window.location.protocol.includes('https') ? 'https://'+window.location.host : "https://deskstore-dd5e5cf522c0.herokuapp.com/"
 
 export function otpHandler(number,type){
     number = number.replace("+","")
