@@ -391,8 +391,8 @@
                     </div> 
                 </div> 
                 <ul class="nav nav-tabs mb-3 px-md-4 px-2"> 
-                    <li class="nav-item"> <a class="nav-link px-2 " aria-current="page" href="#credit"  onclick="cardPayment()">Credit Card</a> </li> 
-                    <li class="nav-item"> <a class="nav-link px-2 active" href="#mobile" onclick="mobilePayment();this.classList.add('active') ? !this.classList.contains('active') : this.classList.remove('active')">Mobile Payment</a> </li> 
+                    <li class="nav-item"> <a class="nav-link px-2 " aria-current="page" href="#credit"  onclick="cardPayment();!this.classList.contains('active') ? this.classList.add('active') : this.classList.remove('active')" disabled>Credit Card</a> </li> 
+                    <li class="nav-item"> <a class="nav-link px-2 active" href="#mobile" onclick="mobilePayment();!this.classList.contains('active') ? this.classList.add('active') : this.classList.remove('active')">Mobile Payment</a> </li> 
                     <li class="nav-item ms-auto"> <a class="nav-link px-2" href="#">+ More</a> </li> 
                 </ul> 
                     <div class="px-md-5 px-4 mb-4 d-flex align-items-center"> 
@@ -439,7 +439,7 @@
                                 </div> 
                             </div> 
                             <div class="col-12 px-md-5 px-4 mt-3"> 
-                                <button class="btn btn-primary w-100 card-pay" type="button">Pay KES {{total}}</button> 
+                                <button class="btn btn-primary w-100 card-pay" onclick="module.cardPay()"type="button">Pay KES {{total}}</button> 
                             </div> 
                         </div> 
                     </form> 
@@ -516,6 +516,11 @@
             }
             
         }
+
+		module.cardPay = () =>{
+			alert('Card Payment is not yet active, try other options');
+			return;
+		}
 
         module.payNow = (data) =>{
             console.log("paynow data",data)
