@@ -156,6 +156,7 @@ export function showSingle(id){
         document.getElementById("exploreProduct-content").parentElement.style.height="599px"
         document.getElementById("exploreProduct-content").parentElement.style.overflowY = "scroll"
         document.getElementById("exploreProduct-content").parentElement.style.minWidth = "85vh"
+		document.getElementById("exploreProduct-content").parentElement.style.maxWidth = "95vh"
         document.getElementById("exploreProduct-content").style.height = "99%"
         document.getElementById("exploreProduct-content").style.overflowY = "scroll"
         document.getElementById("exploreProduct-content").innerHTML = `
