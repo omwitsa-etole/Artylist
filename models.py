@@ -474,7 +474,7 @@ class Order:
         query_1 = await DatabaseManager.query(f"SELECT * from sales_order_wish where user_id=%s and item_id=%s and deleted_at is NULL"%(user_id,item['id']))
         if query_1 and len(query_1) > 0:
             return {'message':'Item already exists in your wishlist'}
-        query = DatabaseManager.insert(f"INSERT INTO sales_order_wish (user_id,item_id, order_id,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount) VALUES (%s,%d, '%s','%s','%s','%s','%s','%s','%s','%s')"%(user_id,item['id'],None,item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty))
+        query = DatabaseManager.insert(f"INSERT INTO sales_order_wish (user_id,item_id, order_id,description,quantity,unit_price,tax_rate,discount_rate,discount_amount,amount,company) VALUES (%s,%d, '%s','%s','%s','%s','%s','%s','%s','%s','%s')"%(user_id,item['id'],None,item['description'],qty,item['unit_price'],item['tax_rate'],item['discount_rate'],item['discount_rate']*(item['unit_price']*qty),item['unit_price']*qty,item['company']))
         if query == None:
             return None
         return await Order.get_wish(user_id)
