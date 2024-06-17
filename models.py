@@ -13,7 +13,7 @@ class Payments:
         self.company = company
         self.user = user
     def to_dict(self):
-        return self
+        return self.__dict__
 
 class Profile:
     def __init__(self,id,user_id,fullname,age,gender,address,avatar,language,payment,intersets,price_range,created,updated,delivery_address,payment_methods=None,companies=None):
@@ -327,6 +327,7 @@ class Company:
         ls_1 = []
         ls_2 = []
         for b in bs:
+            #print(b)
             if b['name'] not in ls_1:
                 ls_1.append(b['name'])
                 ls_2.append(b)

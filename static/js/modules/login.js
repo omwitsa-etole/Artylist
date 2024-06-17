@@ -6,7 +6,7 @@ export function getVerification(number,code){
    
     var pwd = $("#email-password").val()
     
-    if(number && number.includes("@") || pwd !== undefined || number.length < 9){
+    if(number && number.includes("@") || pwd !== undefined ||  number.length < 9){
         
         let el = $("#emailLogin")
         /*
@@ -68,7 +68,7 @@ export function otpHandler(number,type){
     }
 	setTimeout(function(){
 		for(let i=2;i<5;i++){
-		console.log(i)
+		
 		$("#digit-"+i).on('keyup',function(){
 			$("#digit-"+(i+1)).select();
 		})
@@ -89,14 +89,14 @@ export function otpHandler(number,type){
             code =code+digit_3
             var digit_4 = $("#digit-5").val()
             code =code+digit_4
-            $("#numLogin").text('Logging in ...')
-            
+            $("#verifyCode").text('Logging in ...')
+            if(code == undefined){alert('Login code required');return;}
             fetchFunction("/api/login",{username_email:number,password:code},"POST",function(data){
-                $("#numLogin").text('Next')
+                $("#verifyCode").text('Next')
                 if(data.status == 0){
                     location.href = "store";
                 }
-                if(data.message){
+                if(data.message && !data.message.includes("success")){
                     alert(data.message)
                 }
             })
@@ -154,6 +154,11 @@ export function emailLogin(){
     `
 }
 export function numberLogin(){
+    const ecode = document.getElementById("verifyCode")
+    if (ecode){
+        ecode.setAttribute("id","getcode")
+    }
+    
     return document.getElementById("page-content").innerHTML = `
     <div class="container">
         <div class="account-area">
@@ -161,7 +166,7 @@ export function numberLogin(){
             <div class="section-head ps-0">
                 <h3>Please Enter your Phone Number</h3>
             </div>
-            <form onsubmit="document.getElementById('getcode');return false;">
+            <form onsubmit="document.getElementById('getcode').click();return false;">
             <div class="input-group dz-select">
                 <div class="input-group-text"> 
                     <div>

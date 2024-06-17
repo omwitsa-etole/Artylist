@@ -327,6 +327,9 @@ async def checkout():
 
 @app.route("/explore")
 async def explore():
+    user_id = 0
+    if session.get("user"):
+        user_id = session["user"]["user_id"]
     search_query = request.args.get("query")
     company_query = request.args.get("company")
     category_query = request.args.get("category")
@@ -334,22 +337,23 @@ async def explore():
     groups = await Products.get_groups()
     if search_query and len(search_query) > 1:
         products = await Products.get_products(groups=groups,companies=company,query=query)
+        return render_template("explore.html",**locals())
     elif company_query and len(company_query) > 1:
         for c in company:
             if str(company_query) in str(c['name']) or c['trade_name'] == company_query:
                 company_query = c['company']
         products = await Products.get_products(groups=groups,companies=company,company=company_query)
+        return render_template("explore.html",**locals())
     elif category_query and len(category_query) > 1:
         for c in groups:
             if category_query in str(c['name']) or c['name'] == category_query:
                 category_query = c['id']
-        print("categroy",category_query)
+        #print("categroy",category_query)
         products = await Products.get_products(groups=groups,companies=company,group=category_query)
+        return render_template("explore.html",**locals())
     else:
         products = await Products.get_products(groups=groups,companies=company)
-    user_id = 0
-    if session.get("user"):
-        user_id = session["user"]["user_id"]
+    
     return render_template("explore.html",**locals())
 
 @app.route("/settings")

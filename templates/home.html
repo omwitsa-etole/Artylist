@@ -21,13 +21,51 @@
       height: 100%;
       object-fit: cover;
     }
+    .flexdisplay{
+      display: flex;
+      width: 100%;
+      flex-direction: row;
+      height: 85vh;
+      overflow-y: scroll;
+      margin-bottom: 19px;
+    }
+    #gallery, #gallery-2,#gallery-3{
+      min-height: 85vh;
+      height: auto;
+      flex: auto;
+      position: relative;
+      margin-top: 2%;
+    }
   </style>
-<div class="page-content space-top p-b65">
-	<div class="container fixed-full-area " id="gallery" style="display:flex;text-align: center;">
-		<div class="spinner-border" role="status">
-		  <span class="sr-only">Loading...</span>
-		</div>
+<div class="page-content space-top p-b65 " style="overflow-y: scroll;height: 100vh;">
+	<div class="container fixed-full-area " >
+    <div class="row flexdisplay">
+      <hr/>
+      <h4>Latest Products</h4>
+    <div class="col" id="gallery">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <hr/>
+    <h4>Offers & Discounts</h4>
+    <div class="col" id="gallery-2" >
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    <hr/>
+    <h4>Wishes & Likes</h4>
+    <div class="col" id="gallery-3" >
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+
+    </div>
 	</div>
+  
 </div>
 <script>
 	const module = {}

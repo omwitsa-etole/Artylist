@@ -14,8 +14,8 @@ function allProducts(data){
 	$(".dz-content").on('click',function(){e.preventDefault();return;})
     for(var data of data.data){
         el += `
-        <swiper-slide>
-        <div class="dzSwipe_card"  onclick="module.selectItem(${data.id})" onkeydown="module.selectItem(${data.id})">
+        <swiper-slide style="height: 100%;">
+        <div class="dzSwipe_card" style="height: 100%;" onclick="module.selectItem(${data.id})" onkeydown="module.selectItem(${data.id})">
             <div class="dz-media" >
                 <img src="${data.image}" alt="${data.description}"  onclick="module.showSingle('${data.id}')"style="border-radius: 0;object-fit:contain;width: 100%;height: 100%;">
             </div>
@@ -50,6 +50,32 @@ function allProducts(data){
     return el
 }
 
+function zoomFn(){
+    const dzMediaElements = document.querySelectorAll('.dz-media');
+
+    dzMediaElements.forEach(function(dzMediaElement) {
+        // Find the img element within each 'dz-media' element
+        const imgElement = dzMediaElement.querySelector('img');
+
+        // Check if img element exists
+        if (imgElement) {
+            
+            // Add click event listener for zoom functionality
+            imgElement.addEventListener('click', function() {
+                console.log(imgElement);
+                // Example zoom logic (toggle class or change styles)
+                if (imgElement.classList.contains('zoomed')) {
+                    // Reset zoom
+                    imgElement.classList.remove('zoomed');
+                } else {
+                    // Zoom in
+                    imgElement.classList.add('zoomed');
+                }
+            });
+        }
+    }); 
+}
+
 export function showProduct(data){
     console.log(data)
     setTimeout(function(){
@@ -80,14 +106,29 @@ export function showProduct(data){
             }
             
         });
+        zoomFn();
     },999)
     
-    return document.getElementById("gallery").innerHTML = `
-    <div class="dzSwipe_card-cont dz-gallery-slider mySwiper">
+    document.getElementById("gallery").innerHTML = `
+    <div class="dzSwipe_card-cont dz-gallery-slider mySwiper" style="height: 94%;margin-left: 10px;">
+        
         <swiper-container class="mySwiper" navigation="true">
          ${allProducts(data)}
         </swiper-container>
     </div>
+    `
+    let offers = ``
+    for(var dt of data.data){
+        if(parseInt(dt.discount_rate) > 0){
+            offers += allProducts({data:[dt]});
+        }
+    }
+    document.getElementById("gallery-2").innerHTML = `
+        <div class="dzSwipe_card-cont dz-gallery-slider mySwiper"  style="height: 94%;margin-left: 15px;">
+            <swiper-container class="mySwiper" navigation="true">
+            ${offers}
+            </swiper-container>
+        </div>
     `
 }
 
